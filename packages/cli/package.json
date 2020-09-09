@@ -1,0 +1,16 @@
+{
+  "name": "@wk/std-cli",
+  "version": "1.0.0",
+  "description": "WakeData 前端代码规范命令行工具",
+  "main": "index.js",
+  "license": "MIT",
+  "engines": {
+    "node": ">12.6"
+  },
+  "devDependencies": {
+    "typescript": "^4.0.2"
+  },
+  "dependencies": {
+    "commander": "^6.1.0"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "wkfe-standard",
+  "version": "0.1.0",
+  "description": "wakedata frontend standard",
+  "main": "index.js",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "release:lerna": "lerna version --exact --no-git-tag-version"
+  },
+  "devDependencies": {
+    "lerna": "^3.22.1"
+  }
+}
