@@ -1,5 +1,6 @@
 const { Command } = require('commander')
 const pkg = require('../package.json')
+const init = require('./cmds/init')
 
 const program = new Command()
 program.version(pkg.version)
@@ -20,8 +21,10 @@ program.version(pkg.version)
 program
   .command('init', {})
   .description('初始化项目')
-  .option('-t --type', '项目类型')
-  .action(() => {})
+  .option('-t --type', '项目类型, 支持 react、vue、taro、standard', 'standard')
+  .action((opt) => {
+    init({type: opt.type})
+  })
 
 /**
  * 本地验证
