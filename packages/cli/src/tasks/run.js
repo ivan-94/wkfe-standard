@@ -3,13 +3,15 @@ const { getConfig, print } = require('../utils')
 /**
  * 执行任务
  * @param {string[]} files
+ * @param {string[]} unstagedFiles
  * @param {Array<(ctx: import('./type').Context) => Promise<void>>} tasks
  */
-async function run(files, tasks) {
+async function run(files, unstagedFiles, tasks) {
   const config = await getConfig()
   const ctx = {
     config,
     files,
+    unstagedFiles,
     cwd: process.cwd(),
   }
 

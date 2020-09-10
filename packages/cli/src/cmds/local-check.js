@@ -1,9 +1,10 @@
 const { pretty, eslint, stylelint, run } = require('../tasks')
-const { getStagedFile } = require('../utils')
+const { getStagedFiles, getUnstagedFiles } = require('../utils')
 
 async function exec() {
-  const stagedFile = getStagedFile()
-  await run(stagedFile, [pretty, eslint, stylelint])
+  const stagedFiles = getStagedFiles()
+  const unstagedFiles = getUnstagedFiles()
+  await run(stagedFiles, unstagedFiles, [pretty, eslint, stylelint])
 }
 
 module.exports = exec

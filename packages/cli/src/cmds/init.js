@@ -171,8 +171,7 @@ async function configuration(ctx) {
   const { configurationPath } = ctx
   print('Info', '正在生成配置文件 ' + CONFIGURE_NAME)
   // 安装依赖
-  const config = `
-{
+  const config = `{
   // 里程碑，表示从这个提交开始实施代码格式化. 主要用于远程验证，
   // 当CI程序无法获取到 push 的起始 commit 时，就会用 milestone 来计算变动
   "milestone": "${getHEADref()}",

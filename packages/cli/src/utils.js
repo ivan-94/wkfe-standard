@@ -5,7 +5,6 @@ const set = require('lodash/set')
 const json5 = require('json5')
 const chalk = require('chalk')
 const ch = require('child_process')
-const prettier = require('prettier')
 const multimatch = require('multimatch')
 const pkg = require('../package.json')
 
@@ -87,9 +86,7 @@ class Pkg {
  * @param {object} obj
  */
 function toPrettieredJSON(obj) {
-  const str = JSON.stringify(obj)
-  const prettied = prettier.format(str, { parser: 'json' })
-  return prettied
+  return JSON.stringify(obj, undefined, 2)
 }
 
 /**
@@ -105,18 +102,35 @@ function getLines(str) {
 /**
  * @param {string} commit
  */
-function getChangedFile(commit) {
+function getChangedFiles(commit) {
   const str = execCommand(`git diff --name-only ${commit}`).toString()
   return getLines(str)
 }
 
-function getStagedFile() {
+function getStagedFiles() {
   const str = execCommand(`git diff --name-only --cached`).toString()
   return getLines(str)
 }
 
+function getUnstagedFiles() {
+  const trackeds = execCommand(`git diff --name-only`).toString()
+  const untrackeds = execCommand(`git ls-files --others --exclude-standard`).toString()
+  return getLines(trackeds).concat(getLines(untrackeds))
+}
+
 function getHEADref() {
-  return execCommand(`git rev-parse HEAD`, { printCommand: true }).toString().trim()
+  try {
+    return execCommand(`git rev-parse HEAD`, { printCommand: true }).toString().trim()
+  } catch (err) {
+    return ''
+  }
+}
+
+/**
+ * @param {string[]} files
+ */
+function stageFiles(files) {
+  execCommand(`git add ${files.join(' ')}`, { printCommand: false })
 }
 
 const printPrefix = {
@@ -242,8 +256,10 @@ async function getConfig(cwd = process.cwd()) {
 
 module.exports = {
   UseYarn,
-  getChangedFile,
-  getStagedFile,
+  getChangedFiles,
+  getStagedFiles,
+  getUnstagedFiles,
+  stageFiles,
   getHEADref,
   print,
   execCommand,
