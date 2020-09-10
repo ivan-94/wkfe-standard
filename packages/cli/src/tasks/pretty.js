@@ -1,6 +1,5 @@
 const { getSupportInfo } = require('prettier')
-const { fileFilter, print, stageFiles, getSafeChangeableFiles } = require('../utils')
-const execa = require('execa')
+const { fileFilter, print, stageFiles, getSafeChangeableFiles, execNpmScript } = require('../utils')
 
 /**
  * @type {string[]}
@@ -29,6 +28,7 @@ async function pretty(ctx) {
 
   const filtered = fileFilter(files, PRETTIER_SUPPORT_EXTENSIONS, formatPatterns)
   if (!filtered.length) {
+    print('Info', '没有文件支持 prettier 格式化, 跳过')
     return
   }
 
@@ -37,14 +37,16 @@ async function pretty(ctx) {
   const { safe, unsafe } = getSafeChangeableFiles(filtered, unstagedFiles)
 
   if (safe.length) {
-    execa.commandSync(`prettier --write ${safe.join(' ')}`, { preferLocal: true, cwd: cwd, stdio: 'inherit' })
+    execNpmScript(`prettier --write ${safe.join(' ')}`)
     stageFiles(safe)
   }
 
   if (unsafe.length) {
     print(
       'Error',
-      `下列文件不能被安全地格式化，请完成编辑并 stage(git add) 后重试: \n ${unsafe.map((i) => `\t ${i}`).join('\n')}\n\n`
+      `下列文件不能被安全地格式化，请完成编辑并 stage(git add) 后重试: \n ${unsafe
+        .map((i) => `\t ${i}`)
+        .join('\n')}\n\n`
     )
     process.exit(1)
   }

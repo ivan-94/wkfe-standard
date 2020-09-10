@@ -10,7 +10,7 @@ const stylelint = require('./stylelint')
  * @param {string[]} unstagedFiles
  * @param {Array<(ctx: import('./type').Context) => Promise<void>>} tasks
  */
-async function run(fixable, files, unstagedFiles, tasks = [pretty, eslint, stylelint]) {
+async function run(fixable, files, unstagedFiles, tasks = [eslint, stylelint, pretty]) {
   const config = await getConfig()
   const ctx = {
     config,
@@ -25,8 +25,10 @@ async function run(fixable, files, unstagedFiles, tasks = [pretty, eslint, style
     try {
       await task(ctx)
     } catch (err) {
-      print('Error', `${task.name} 执行失败`, err)
+      print('Error', `${task.name} 执行失败`, err.message)
       failed = true
+    } finally {
+      console.log('\n')
     }
   }
 

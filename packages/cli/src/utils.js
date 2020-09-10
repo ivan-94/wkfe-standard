@@ -3,6 +3,7 @@ const path = require('path')
 const get = require('lodash/get')
 const set = require('lodash/set')
 const json5 = require('json5')
+const execa = require('execa')
 const chalk = require('chalk')
 const ch = require('child_process')
 const multimatch = require('multimatch')
@@ -197,6 +198,15 @@ function execCommand(command, options = {}) {
 }
 
 /**
+ * @param {string} command
+ * @param {{cwd?: string}} options
+ */
+function execNpmScript(command, options = {}) {
+  print('Debug', command)
+  return execa.commandSync(command, { preferLocal: true, cwd: options.cwd || process.cwd(), stdio: 'inherit' })
+}
+
+/**
  * 安装依赖
  * @param {Dep[]} deps
  */
@@ -287,6 +297,7 @@ module.exports = {
   getSafeChangeableFiles,
   print,
   execCommand,
+  execNpmScript,
   toPrettieredJSON,
   Pkg,
   install,
