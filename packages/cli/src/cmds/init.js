@@ -33,6 +33,11 @@ const {
  * @param {Context} ctx
  */
 async function pre(ctx) {
+  if (!fs.existsSync(path.join(ctx.cwd, '.git'))) {
+    print('Error', '请在 git 仓库下执行该命令')
+    process.exit(1)
+  }
+
   if (ctx.pkg.hasInstall(PACKAGE_NAME) && fs.existsSync(ctx.configurationPath)) {
     print('Warn', '已初始化，不必重复调用')
     process.exit(0)
@@ -173,7 +178,8 @@ async function configuration(ctx) {
   // 安装依赖
   const config = `{
   // 里程碑，表示从这个提交开始实施代码格式化. 主要用于远程验证，
-  // 当CI程序无法获取到 push 的起始 commit 时，就会用 milestone 来计算变动
+  // 当CI程序无法获取到 push 的起始 commit 时，就会用 milestone 来计算变动, 
+  // 如果没有提供 milestone 会进行全量检查
   "milestone": "${getHEADref()}",
   // 指定哪些文件将被格式化，默认会格式化所有 prettier 支持的文件类型
   // 格式为 glob, 例如 "**/*.*(js|jsx)"、"!(*test).js"
