@@ -11,3 +11,8 @@ export interface Context {
    */
   fixable: boolean
 }
+
+/**
+ * 如果返回 false，将终止后续任务的执行
+ */
+export type Task = (ctx: import('./type').Context) => Promise<void | false>

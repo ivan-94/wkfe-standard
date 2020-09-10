@@ -9,7 +9,7 @@ const {
 
 /**
  * eslint 检查
- * @param {import('./type').Context} ctx
+ * @type {import("./type").Task}
  */
 async function eslint(ctx) {
   const {

@@ -1,5 +1,5 @@
 /**
- * @param {import('./type').Context} ctx
+ * @type {import("./type").Task}
  */
 async function stylelint(ctx) {}
 

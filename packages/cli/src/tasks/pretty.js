@@ -11,7 +11,7 @@ const PRETTIER_SUPPORT_EXTENSIONS = getSupportInfo().languages.reduce(
 )
 
 /**
- * @param {import('./type').Context} ctx
+ * @type {import("./type").Task}
  */
 async function pretty(ctx) {
   const {
