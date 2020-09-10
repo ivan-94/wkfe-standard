@@ -1,0 +1,22 @@
+{
+  "name": "eslint-config-wkts",
+  "version": "1.0.0-test",
+  "description": "WakeData Typescript ESLint config",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {},
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.1.0",
+    "@typescript-eslint/parser": "^4.1.0",
+    "eslint-config-standard-with-typescript": "^19.0.1",
+    "eslint-config-wk": "^1.0.0-test"
+  },
+  "devDependencies": {
+    "eslint": "^7.8.1",
+    "typescript": "^4.0.2"
+  },
+  "peerDependencies": {
+    "eslint": ">=7",
+    "typescript": ">=3.0"
+  }
+}
