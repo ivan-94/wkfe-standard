@@ -88,7 +88,9 @@ async function prettier(ctx) {
  * stylelint 初始化
  * @param {Context} ctx
  */
-async function stylelint(ctx) {}
+async function stylelint(ctx) {
+  // TODO:
+}
 
 /**
  * stylelint 初始化

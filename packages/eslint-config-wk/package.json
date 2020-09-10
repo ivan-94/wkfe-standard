@@ -1,0 +1,23 @@
+{
+  "name": "eslint-config-wk",
+  "version": "1.0.0-test",
+  "description": "WakeData standard Javascript eslint config",
+  "main": "index.js",
+  "license": "MIT",
+  "prettier": "prettier-config-wk",
+  "files": [
+    "index.js"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
+  },
+  "dependencies": {
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1"
+  }
+}

@@ -9,7 +9,7 @@
     - eslint-config-wktaro   - 适用于 Taro 项目, 继承 wkreact
   - eslint-config-wkvue      - 使用于 Vue 项目，继承 wk 
 - stylelint-config-wk      - 通用的 Stylint 配置
-  - eslint-config-wktaro   - 适用于 Taro 项目, 继承 wk
+  - stylelint-config-wktaro   - 适用于 Taro 项目, 继承 wk
   ...                      - TODO
 - prettier-config-wk       - 通用的 prettier 配置
 

@@ -9,7 +9,9 @@
     "release:lerna": "lerna version --exact --no-git-tag-version"
   },
   "devDependencies": {
-    "husky": "^4.3.0"
+    "eslint": "^7.8.1",
+    "husky": "^4.3.0",
+    "prettier-config-wk": "^1.0.0"
   },
   "dependencies": {}
 }
