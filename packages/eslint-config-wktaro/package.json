@@ -1,0 +1,25 @@
+{
+  "name": "eslint-config-wktaro",
+  "version": "1.0.0-test",
+  "description": "WakeData Eslint config for Taro",
+  "main": "index.js",
+  "license": "MIT",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
+  },
+  "files": [
+    "index.js"
+  ],
+  "dependencies": {
+    "eslint-config-taro": "2.x",
+    "eslint-config-wkreact": "^1.0.0-test"
+  },
+  "devDependencies": {
+    "eslint": "^7.8.1",
+    "eslint-config-wk": "^1.0.0-test"
+  },
+  "peerDependencies": {
+    "eslint": ">=7"
+  }
+}
