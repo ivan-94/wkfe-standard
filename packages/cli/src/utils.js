@@ -133,6 +133,29 @@ function stageFiles(files) {
   execCommand(`git add ${files.join(' ')}`, { printCommand: false })
 }
 
+/**
+ * 获取可以安全编辑的文件
+ * @param {string[]} stageds
+ * @param {string[]} unstageds
+ */
+function getSafeChangeableFiles(stageds, unstageds) {
+  /** @type {string[]} */
+  const safe = []
+  /** @type {string[]} */
+  const unsafe = []
+  for (const file of stageds) {
+    if (unstageds.includes(file)) {
+      unsafe.push(file)
+    } else {
+      safe.push(file)
+    }
+  }
+  return {
+    safe,
+    unsafe,
+  }
+}
+
 const printPrefix = {
   Success: '✅ ',
   Error: chalk.red('❌ 错误'),
@@ -261,6 +284,7 @@ module.exports = {
   getUnstagedFiles,
   stageFiles,
   getHEADref,
+  getSafeChangeableFiles,
   print,
   execCommand,
   toPrettieredJSON,

@@ -1,5 +1,5 @@
 const { getSupportInfo } = require('prettier')
-const { fileFilter, print, stageFiles } = require('../utils')
+const { fileFilter, print, stageFiles, getSafeChangeableFiles } = require('../utils')
 const execa = require('execa')
 
 /**
@@ -19,8 +19,14 @@ async function pretty(ctx) {
     files,
     unstagedFiles,
     config: { formatPatterns },
+    fixable,
     cwd,
   } = ctx
+
+  if (!fixable) {
+    return
+  }
+
   const filtered = fileFilter(files, PRETTIER_SUPPORT_EXTENSIONS, formatPatterns)
   if (!filtered.length) {
     return
@@ -28,27 +34,17 @@ async function pretty(ctx) {
 
   print('Info', '正在执行 prettier 格式化')
   print('Debug', '变动文件: \n' + filtered.map((i) => `\t ${i}`).join('\n') + '\n')
-  /** @type {string[]} */
-  const safeFiles = []
-  /** @type {string[]} */
-  const dangerousFiles = []
-  for (const file of filtered) {
-    if (unstagedFiles.includes(file)) {
-      dangerousFiles.push(file)
-    } else {
-      safeFiles.push(file)
-    }
+  const { safe, unsafe } = getSafeChangeableFiles(filtered, unstagedFiles)
+
+  if (safe.length) {
+    execa.commandSync(`prettier --write ${safe.join(' ')}`, { preferLocal: true, cwd: cwd, stdio: 'inherit' })
+    stageFiles(safe)
   }
 
-  if (safeFiles.length) {
-    execa.commandSync(`prettier --write ${safeFiles.join(' ')}`, { preferLocal: true, cwd: cwd, stdio: 'inherit' })
-    stageFiles(safeFiles)
-  }
-
-  if (dangerousFiles.length) {
+  if (unsafe.length) {
     print(
       'Error',
-      `下列文件不能被安全地格式化，请完成编辑 stage 后重试: \n ${dangerousFiles.map((i) => `\t ${i}`).join('\n')}\n\n`
+      `下列文件不能被安全地格式化，请完成编辑并 stage(git add) 后重试: \n ${unsafe.map((i) => `\t ${i}`).join('\n')}\n\n`
     )
     process.exit(1)
   }
