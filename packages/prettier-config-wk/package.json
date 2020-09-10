@@ -1,0 +1,7 @@
+{
+  "name": "prettier-config-wk",
+  "version": "1.0.0",
+  "description": "WakeData prettier 配置",
+  "main": "index.json",
+  "license": "MIT"
+}

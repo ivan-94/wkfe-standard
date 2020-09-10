@@ -11,6 +11,7 @@
 - stylelint-config-wk      - 通用的 Stylint 配置
   - eslint-config-wktaro   - 适用于 Taro 项目, 继承 wk
   ...                      - TODO
+- prettier-config-wk       - 通用的 prettier 配置
 
 ## 安装
 
