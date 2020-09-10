@@ -1,10 +1,9 @@
 {
-  "name": "eslint-config-wkts",
+  "name": "eslint-config-wkreact",
   "version": "1.0.0-test",
-  "description": "WakeData Typescript ESLint config",
+  "description": "WakeData React Eslint config",
   "main": "index.js",
   "license": "MIT",
-  "scripts": {},
   "publishConfig": {
     "registry": "https://registry.npmjs.org",
     "access": "public"
@@ -13,14 +12,15 @@
     "index.js"
   ],
   "dependencies": {
-    "@typescript-eslint/eslint-plugin": "^4.1.0",
-    "@typescript-eslint/parser": "^4.1.0",
-    "eslint-config-standard-with-typescript": "^19.0.1",
-    "eslint-config-wk": "^1.0.0-test"
+    "babel-eslint": "^10.1.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-config-standard-react": "^9.2.0",
+    "eslint-plugin-react": "^7.20.6",
+    "eslint-plugin-react-hooks": "^4.1.0"
   },
   "devDependencies": {
     "eslint": "^7.8.1",
-    "typescript": "^4.0.2"
+    "eslint-config-wk": "^1.0.0-test"
   },
   "peerDependencies": {
     "eslint": ">=7",
