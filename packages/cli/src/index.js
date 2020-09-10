@@ -22,9 +22,10 @@ program.description('WakeData 前端代码规范检查工具')
 program
   .command('init', {})
   .description('初始化项目')
-  .option('-t --type', '项目类型, 支持 react、vue、taro、standard, 默认为 standard', 'standard')
+  .option('--typescript', '项目类型, 是否支持 Typescript, 默认如果存在 tsconfig,json 则开启')
+  .option('-t --type', '项目类型, 支持 react、vue、taro、standard, 默认为根据当前项目依赖自动推断')
   .action((opt) => {
-    init({ type: opt.type })
+    init({ type: opt.type, typescript: opt.typescript })
   })
 
 /**

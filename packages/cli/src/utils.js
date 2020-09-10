@@ -67,10 +67,17 @@ class Pkg {
     if (!this.dirty) {
       return
     }
-    const str = JSON.stringify(this.obj)
-    const prettied = prettier.format(str, { parser: 'json' })
-    await fs.promises.writeFile(this.path, prettied)
+    await fs.promises.writeFile(this.path, toPrettieredJSON(this.obj))
   }
+}
+
+/**
+ * @param {object} obj
+ */
+function toPrettieredJSON(obj) {
+  const str = JSON.stringify(obj)
+  const prettied = prettier.format(str, { parser: 'json' })
+  return prettied
 }
 
 /**
@@ -158,6 +165,7 @@ module.exports = {
   getChangedFile,
   print,
   execCommand,
+  toPrettieredJSON,
   Pkg,
   install,
   NOOP,

@@ -12,6 +12,7 @@ module.exports = {
 
 - [eslint-plugin-vue](https://github.com/vuejs/eslint-plugin-vue/tree/v6.2.2/docs/user-guide)
 - [eslint-plugin-vue Rules](https://github.com/vuejs/eslint-plugin-vue/tree/v6.2.2/docs/rules)
+- [Vue Style guide](https://vuejs.org/v2/style-guide/)
 
 TODO:
 vue 配置

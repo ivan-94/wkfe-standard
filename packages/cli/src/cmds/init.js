@@ -1,7 +1,16 @@
 const path = require('path')
 const fs = require('fs')
 const pret = require('prettier')
-const { Pkg, print, install, NOOP, COMMAND_NAME, PACKAGE_NAME, PRETTIER_CONFIG_NAME } = require('../utils')
+const {
+  Pkg,
+  print,
+  install,
+  NOOP,
+  COMMAND_NAME,
+  PACKAGE_NAME,
+  PRETTIER_CONFIG_NAME,
+  toPrettieredJSON,
+} = require('../utils')
 
 /**
  * @typedef {import('../utils').Dep} Dep
@@ -13,6 +22,8 @@ const { Pkg, print, install, NOOP, COMMAND_NAME, PACKAGE_NAME, PRETTIER_CONFIG_N
  *   onFinish: (cb: () => void) => void
  *   configurationPath: string
  *   cwd: string
+ *   typescript: Boolean
+ *   type: 'react' | 'vue' | 'taro' | 'standard'
  * }} Context
  */
 
@@ -96,7 +107,55 @@ async function stylelint(ctx) {
  * stylelint 初始化
  * @param {Context} ctx
  */
-async function eslint(ctx) {}
+async function eslint(ctx) {
+  print('Info', '正在初始化 eslint')
+  const { pkg, cwd, type, typescript, addDep } = ctx
+  const bakPath = path.join(cwd, '.eslintrc.bak')
+  const ignorePath = path.join(cwd, '.eslintignore')
+
+  if (pkg.get('eslintConfig')) {
+    print('Warn', '已存在 eslint 配置，它们将被拷贝到 .eslintrc.bak, 请手动合并')
+    const config = pkg.get('eslintConfig')
+    pkg.set('eslintConfig', undefined)
+    await fs.promises.writeFile(bakPath, JSON.stringify(config, undefined, 2))
+  } else {
+    const eslintrcPaths = ['.eslintrc.js', '.eslintrc.json', '.eslintrc']
+    const existedConfigFile = eslintrcPaths.find((p) => fs.existsSync(path.join(cwd, p)))
+    if (existedConfigFile) {
+      print('Warn', '已存在 eslint 配置，它们将被拷贝到 .eslintrc.bak, 请手动合并')
+      await fs.promises.rename(path.join(cwd, existedConfigFile), bakPath)
+    }
+  }
+
+  // 创建配置文件
+  if (typescript) {
+    print('Info', '使用 Typescript')
+  }
+  print('Info', `项目类型: ${type}`)
+  const config = {
+    extends: [typescript ? 'wkts' : 'wk', type !== 'standard' && `wk${type}`].filter(Boolean),
+    plugins: [],
+    rules: {},
+    env: {
+      browser: true,
+      es2021: true,
+    },
+  }
+
+  print('Info', '正在创建 .eslintrc.json')
+  await fs.promises.writeFile(path.join(cwd, '.eslintrc.json'), toPrettieredJSON(config))
+
+  if (!fs.existsSync(ignorePath)) {
+    print('Info', '正在创建 .eslintignore')
+    const ignoreContent = await fs.promises.readFile(path.join(__dirname, '../templates/.eslintignore'))
+    await fs.promises.writeFile(ignorePath, ignoreContent)
+  }
+
+  // 安装依赖
+  if (!pkg.hasInstall(PACKAGE_NAME)) {
+    addDep({ name: PACKAGE_NAME, dev: true })
+  }
+}
 
 /**
  * 配置文件初始化
@@ -108,7 +167,7 @@ async function configuration(ctx) {
 
 /**
  * 项目初始化
- * @param {{type: 'react' | 'vue' | 'taro' | 'standard'}} options
+ * @param {{type?: 'react' | 'vue' | 'taro' | 'standard', typescript?: boolean}} options
  */
 async function exec(options) {
   const cwd = process.cwd()
@@ -126,6 +185,17 @@ async function exec(options) {
   const tasks = [pre, husky, prettier, stylelint, eslint, configuration]
   /** @type {Array<() => void>} */
   const postTasks = []
+  const typescript = options.typescript != null ? options.typescript : fs.existsSync(path.join(cwd, 'tsconfig.json'))
+  const type =
+    options.type != null
+      ? options.type
+      : pkg.hasInstall('@tarojs/taro')
+      ? 'taro'
+      : pkg.hasInstall('react')
+      ? 'react'
+      : pkg.hasInstall('vue')
+      ? 'vue'
+      : 'standard'
 
   /** @type {Context} */
   const ctx = {
@@ -134,6 +204,8 @@ async function exec(options) {
     onFinish: (t) => postTasks.push(t),
     configurationPath,
     cwd,
+    typescript,
+    type,
   }
 
   for (const task of tasks) {
