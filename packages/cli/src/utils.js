@@ -195,11 +195,10 @@ function print(level, ...args) {
 /**
  *
  * @param {string} command
- * @param {{cwd?: string, quite?: string, printCommand?: boolean}} options
+ * @param {{cwd?: string, printCommand?: boolean}} options
  */
 function execCommand(command, options = {}) {
   const finalOptions = {
-    quite: true,
     cwd: process.cwd(),
     printCommand: true,
     ...options,
@@ -207,13 +206,18 @@ function execCommand(command, options = {}) {
 
   if (finalOptions.printCommand) {
     print('Debug', `$ ${command}`)
-    finalOptions.quite = false
   }
 
-  return ch.execSync(command, {
+  const output = ch.execSync(command, {
     cwd: finalOptions.cwd,
-    stdio: ['pipe', finalOptions.quite ? 'ignore' : 'pipe', 'pipe'],
+    stdio: ['inherit', 'pipe', 'inherit'],
   })
+
+  if (finalOptions.printCommand) {
+    console.log('\n' + output)
+  }
+
+  return output
 }
 
 /**
