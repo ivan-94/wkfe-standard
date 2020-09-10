@@ -1,9 +1,7 @@
 {
-  "name": "eslint-config-wkreact",
+  "name": "eslint-config-wkvue",
   "version": "1.0.0-test",
-  "description": "WakeData React Eslint config",
-  "main": "index.js",
-  "license": "MIT",
+  "description": "WakeDate Eslint Config for Vue",
   "publishConfig": {
     "registry": "https://registry.npmjs.org",
     "access": "public"
@@ -11,12 +9,11 @@
   "files": [
     "index.js"
   ],
+  "main": "index.js",
+  "license": "MIT",
   "dependencies": {
-    "babel-eslint": "^10.1.0",
     "eslint-config-prettier": "^6.11.0",
-    "eslint-config-standard-react": "^9.2.0",
-    "eslint-plugin-react": "^7.20.6",
-    "eslint-plugin-react-hooks": "^4.1.0"
+    "eslint-plugin-vue": "^6.2.2"
   },
   "devDependencies": {
     "eslint": "^7.8.1",

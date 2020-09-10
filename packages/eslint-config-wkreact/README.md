@@ -4,7 +4,7 @@
 
 ```js
 module.exports = {
-  extends: ['wk', 'wk-react'],
+  extends: ['wk', 'wkreact'],
 }
 ```
 
