@@ -4,11 +4,15 @@ const set = require('lodash/set')
 const chalk = require('chalk')
 const ch = require('child_process')
 const prettier = require('prettier')
+const pkg = require('../package.json')
 
 const UseYarn = fs.existsSync('yarn.lock')
+const COMMAND_NAME = 'wkstd'
+const PACKAGE_NAME = pkg.name
+const NOOP = () => {}
 
 /**
- * @typedef {{name: string, version?: string, dev: boolean}} Dep 
+ * @typedef {{name: string, version?: string, dev: boolean}} Dep
  */
 
 /**
@@ -40,13 +44,30 @@ class Pkg {
     this.dirty = true
   }
 
+  /**
+   * 判断依赖是否安装
+   * @param {string} name
+   */
+  hasInstall(name) {
+    const dep = this.obj.dependencies
+    const devDep = this.obj.devDependencies
+    if (dep && name in dep) {
+      return true
+    }
+    if (devDep && name in devDep) {
+      return true
+    }
+
+    return false
+  }
+
   async write() {
     if (!this.dirty) {
       return
     }
     const str = JSON.stringify(this.obj)
-    const prettied = prettier.format(str, {})
-    fs.promises.writeFile(this.path, prettied)
+    const prettied = prettier.format(str, { parser: 'json' })
+    await fs.promises.writeFile(this.path, prettied)
   }
 }
 
@@ -102,10 +123,33 @@ function execCommand(command, options = {}) {
 }
 
 /**
- * 安装依赖 
- * @param {Dep[]} deps 
+ * 安装依赖
+ * @param {Dep[]} deps
  */
-function install(deps) {}
+function install(deps) {
+  /** @type {Dep[]} */
+  const dep = []
+  /** @type {Dep[]} */
+  const devDep = []
+  deps.forEach((i) => (i.dev ? devDep.push(i) : dep.push(i)))
+
+  /**
+   * @param {Dep[]} list
+   * @param {boolean} dev
+   */
+  const toCommand = (list, dev) => {
+    const pkgs = list.map((i) => (i.version ? `${i.name}@${i.version}` : i.name)).join(' ')
+    return UseYarn ? `yarn add ${pkgs} ${dev ? '-D' : ''}` : `npm install ${pkgs} ${dev ? '--save-dev' : '--save'}`
+  }
+
+  if (devDep.length) {
+    execCommand(toCommand(devDep, true), { printCommand: true })
+  }
+
+  if (dep.length) {
+    execCommand(toCommand(dep, true), { printCommand: true })
+  }
+}
 
 module.exports = {
   UseYarn,
@@ -113,5 +157,9 @@ module.exports = {
   print,
   execCommand,
   Pkg,
-  install
+  install,
+  NOOP,
+  COMMAND_NAME,
+  PACKAGE_NAME,
+  pkg,
 }

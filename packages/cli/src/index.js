@@ -1,9 +1,10 @@
 const { Command } = require('commander')
-const pkg = require('../package.json')
+const { pkg } = require('./utils')
 const init = require('./cmds/init')
 
 const program = new Command()
 program.version(pkg.version)
+program.description('WakeData 前端代码规范检查工具')
 
 /**
  * 初始化项目
@@ -21,17 +22,19 @@ program.version(pkg.version)
 program
   .command('init', {})
   .description('初始化项目')
-  .option('-t --type', '项目类型, 支持 react、vue、taro、standard', 'standard')
+  .option('-t --type', '项目类型, 支持 react、vue、taro、standard, 默认为 standard', 'standard')
   .action((opt) => {
-    init({type: opt.type})
+    init({ type: opt.type })
   })
 
 /**
  * 本地验证
  */
-program.command('local-lint')
+program.command('local-check').description('本地 lint 检查, 配合 husky')
 
 /**
  * 远程验证
  */
-program.command('remote-lint')
+program.command('remote-check').description('远程 lint 检查，主要用于 CI')
+
+program.parse(process.argv)

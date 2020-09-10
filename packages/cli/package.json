@@ -5,12 +5,21 @@
   "main": "index.js",
   "license": "MIT",
   "engines": {
-    "node": ">12.6"
+    "node": ">=12.4"
+  },
+  "bin": {
+    "wkstd": "./bin/wkstd.js"
   },
   "devDependencies": {
-    "typescript": "^4.0.2"
+    "typescript": "^4.0.2",
+    "@types/lodash": "^4.14.161",
+    "@types/prettier": "^2.1.0",
+    "lerna": "^3.22.1"
   },
   "dependencies": {
-    "commander": "^6.1.0"
+    "commander": "^6.1.0",
+    "chalk": "^4.1.0",
+    "lodash": "^4.17.20",
+    "prettier": "^2.1.1"
   }
 }
