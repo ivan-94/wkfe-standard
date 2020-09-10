@@ -101,6 +101,14 @@ function getLines(str) {
 }
 
 /**
+ * 是否为 git 仓库
+ * @param {string} [cwd]
+ */
+function isGitRepo(cwd) {
+  return fs.existsSync(path.join(cwd || process.cwd(), '.git'))
+}
+
+/**
  * @param {string} commit
  */
 function getChangedFiles(commit) {
@@ -113,10 +121,21 @@ function getStagedFiles() {
   return getLines(str)
 }
 
+/**
+ * 获取所有未提交的文件
+ */
 function getUnstagedFiles() {
   const trackeds = execCommand(`git diff --name-only`).toString()
   const untrackeds = execCommand(`git ls-files --others --exclude-standard`).toString()
   return getLines(trackeds).concat(getLines(untrackeds))
+}
+
+/**
+ * 获取所有已提交到仓库的文件
+ */
+function getAllCachedFiles() {
+  const str = execCommand('git ls-files --exclude-standard --cached').toString()
+  return getLines(str)
 }
 
 function getHEADref() {
@@ -289,9 +308,11 @@ async function getConfig(cwd = process.cwd()) {
 
 module.exports = {
   UseYarn,
+  isGitRepo,
   getChangedFiles,
   getStagedFiles,
   getUnstagedFiles,
+  getAllCachedFiles,
   stageFiles,
   getHEADref,
   getSafeChangeableFiles,

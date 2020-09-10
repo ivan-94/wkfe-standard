@@ -12,6 +12,7 @@ const {
   toPrettieredJSON,
   getHEADref,
   CONFIGURE_NAME,
+  isGitRepo,
 } = require('../utils')
 
 /**
@@ -33,7 +34,7 @@ const {
  * @param {Context} ctx
  */
 async function pre(ctx) {
-  if (!fs.existsSync(path.join(ctx.cwd, '.git'))) {
+  if (!isGitRepo(ctx.cwd)) {
     print('Error', '请在 git 仓库下执行该命令')
     process.exit(1)
   }
