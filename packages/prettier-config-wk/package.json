@@ -3,5 +3,9 @@
   "version": "1.0.0",
   "description": "WakeData prettier 配置",
   "main": "index.json",
-  "license": "MIT"
+  "license": "MIT",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
+  }
 }

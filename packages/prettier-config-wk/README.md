@@ -18,3 +18,12 @@ Edit package.json:
   "prettier": "prettier-config-wk"
 }
 ```
+
+如果要扩展该配置，请新建 `.prettierrc.js`：
+
+```js
+module.exports = {
+  ...require('prettier-config-wk'),
+  semi: false,
+}
+```

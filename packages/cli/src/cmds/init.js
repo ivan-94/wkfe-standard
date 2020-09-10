@@ -1,6 +1,7 @@
 const path = require('path')
 const fs = require('fs')
-const { Pkg, print, install, NOOP, COMMAND_NAME, PACKAGE_NAME } = require('../utils')
+const pret = require('prettier')
+const { Pkg, print, install, NOOP, COMMAND_NAME, PACKAGE_NAME, PRETTIER_CONFIG_NAME } = require('../utils')
 
 /**
  * @typedef {import('../utils').Dep} Dep
@@ -70,7 +71,18 @@ async function husky(ctx) {
  * prettier 初始化
  * @param {Context} ctx
  */
-async function prettier(ctx) {}
+async function prettier(ctx) {
+  print('Info', '正在初始化 prettier')
+  const { pkg, cwd } = ctx
+
+  if (pkg.get('prettier') || (await pret.resolveConfigFile(cwd)) != null) {
+    print('Info', 'prettier 配置已存在，跳过')
+  } else {
+    pkg.set('prettier', PRETTIER_CONFIG_NAME)
+    const ignoreContent = await fs.promises.readFile(path.join(__dirname, '../templates/.prettierignore'))
+    await fs.promises.writeFile(path.join(cwd, '.prettierignore'), ignoreContent)
+  }
+}
 
 /**
  * stylelint 初始化
@@ -129,8 +141,10 @@ async function exec(options) {
   await pkg.write()
 
   // 安装依赖
-  print('Info', '正在安装依赖，这可能需要一点时间')
-  await install(thingsNeedToInstall)
+  if (thingsNeedToInstall.length) {
+    print('Info', '正在安装依赖，这可能需要一点时间')
+    await install(thingsNeedToInstall)
+  }
 
   // 触发已完成钩子
   for (const task of postTasks) {

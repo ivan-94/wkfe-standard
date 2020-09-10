@@ -6,14 +6,16 @@ const ch = require('child_process')
 const prettier = require('prettier')
 const pkg = require('../package.json')
 
-const UseYarn = fs.existsSync('yarn.lock')
-const COMMAND_NAME = 'wkstd'
-const PACKAGE_NAME = pkg.name
-const NOOP = () => {}
-
 /**
  * @typedef {{name: string, version?: string, dev: boolean}} Dep
  */
+
+const UseYarn = fs.existsSync('yarn.lock')
+const COMMAND_NAME = 'wkstd'
+const PACKAGE_NAME = pkg.name
+const PRETTIER_CONFIG_NAME = 'prettier-config-wk'
+
+const NOOP = () => {}
 
 /**
  * package.json 读写
@@ -161,5 +163,6 @@ module.exports = {
   NOOP,
   COMMAND_NAME,
   PACKAGE_NAME,
+  PRETTIER_CONFIG_NAME,
   pkg,
 }

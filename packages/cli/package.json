@@ -1,5 +1,5 @@
 {
-  "name": "@wk/std-cli",
+  "name": "wkstd",
   "version": "1.0.0",
   "description": "WakeData 前端代码规范命令行工具",
   "main": "index.js",
@@ -17,6 +17,7 @@
     "lerna": "^3.22.1"
   },
   "dependencies": {
+    "prettier-config-wk": "1.0.0",
     "commander": "^6.1.0",
     "chalk": "^4.1.0",
     "lodash": "^4.17.20",
