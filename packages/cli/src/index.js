@@ -1,6 +1,7 @@
 const { Command } = require('commander')
 const { pkg } = require('./utils')
 const init = require('./cmds/init')
+const localCheck = require('./cmds/local-check')
 
 const program = new Command()
 program.version(pkg.version)
@@ -31,7 +32,12 @@ program
 /**
  * 本地验证
  */
-program.command('local-check').description('本地 lint 检查, 配合 husky')
+program
+  .command('local-check')
+  .description('本地 lint 检查, 配合 husky')
+  .action(() => {
+    localCheck()
+  })
 
 /**
  * 远程验证

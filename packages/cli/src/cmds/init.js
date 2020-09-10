@@ -10,6 +10,8 @@ const {
   PACKAGE_NAME,
   PRETTIER_CONFIG_NAME,
   toPrettieredJSON,
+  getHEADref,
+  CONFIGURE_NAME,
 } = require('../utils')
 
 /**
@@ -155,6 +157,10 @@ async function eslint(ctx) {
   if (!pkg.hasInstall(PACKAGE_NAME)) {
     addDep({ name: PACKAGE_NAME, dev: true })
   }
+
+  if (!pkg.hasInstall('eslint')) {
+    addDep({ name: 'eslint', dev: true })
+  }
 }
 
 /**
@@ -162,7 +168,25 @@ async function eslint(ctx) {
  * @param {Context} ctx
  */
 async function configuration(ctx) {
+  const { configurationPath } = ctx
+  print('Info', '正在生成配置文件 ' + CONFIGURE_NAME)
   // 安装依赖
+  const config = `
+{
+  // 里程碑，表示从这个提交开始实施代码格式化. 主要用于远程验证，
+  // 当CI程序无法获取到 push 的起始 commit 时，就会用 milestone 来计算变动
+  "milestone": "${getHEADref()}",
+  // 指定哪些文件将被格式化，默认会格式化所有 prettier 支持的文件类型
+  // 格式为 glob, 例如 "**/*.*(js|jsx)"、"!(*test).js"
+  // 详见 multimatch
+  "formatPatterns": [],
+  // 指定哪些文件将被 eslint 格式化, 默认会格式化所有 .ts, .tsx, .js, .jsx, .mjs, .vue
+  "scriptPatterns": [],
+  // 指定哪些文件将被 stylelint 格式化
+  "stylePatterns": []
+}
+`
+  await fs.promises.writeFile(configurationPath, config)
 }
 
 /**
@@ -172,7 +196,7 @@ async function configuration(ctx) {
 async function exec(options) {
   const cwd = process.cwd()
   const pkgPath = path.join(cwd, './package.json')
-  const configurationPath = path.join(cwd, '.standard.json')
+  const configurationPath = path.join(cwd, CONFIGURE_NAME)
 
   if (!fs.existsSync(pkgPath)) {
     print('Error', '未找到 package.json')

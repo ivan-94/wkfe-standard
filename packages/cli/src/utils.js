@@ -1,19 +1,31 @@
 const fs = require('fs')
+const path = require('path')
 const get = require('lodash/get')
 const set = require('lodash/set')
+const json5 = require('json5')
 const chalk = require('chalk')
 const ch = require('child_process')
 const prettier = require('prettier')
+const multimatch = require('multimatch')
 const pkg = require('../package.json')
 
 /**
  * @typedef {{name: string, version?: string, dev: boolean}} Dep
+ * @typedef {{
+ *   milestone: string,
+ *   formatPatterns?: string | string[]
+ *   scriptPatterns?: string | string[]
+ *   stylePatterns?: string | string[]
+ * }} Config
  */
 
 const UseYarn = fs.existsSync('yarn.lock')
 const COMMAND_NAME = 'wkstd'
 const PACKAGE_NAME = pkg.name
 const PRETTIER_CONFIG_NAME = 'prettier-config-wk'
+const CONFIGURE_NAME = '.standard.jsonc'
+const SCRIPT_SUPPORT_EXTENSIONS = ['.js', '.ts', '.jsx', '.tsx', '.mjs', '.vue']
+const STYLE_SUPPORT_EXTENSIONS = ['.css', '.scss', '.sass', '.less', '.stylus']
 
 const NOOP = () => {}
 
@@ -81,14 +93,30 @@ function toPrettieredJSON(obj) {
 }
 
 /**
- * @param {string} commit
+ * @param {string} str
  */
-function getChangedFile(commit) {
-  const str = execCommand(`git diff --name-only ${commit}`).toString()
+function getLines(str) {
   return str
     .split('\n')
     .map((i) => i.trim())
     .filter(Boolean)
+}
+
+/**
+ * @param {string} commit
+ */
+function getChangedFile(commit) {
+  const str = execCommand(`git diff --name-only ${commit}`).toString()
+  return getLines(str)
+}
+
+function getStagedFile() {
+  const str = execCommand(`git diff --name-only --cached`).toString()
+  return getLines(str)
+}
+
+function getHEADref() {
+  return execCommand(`git rev-parse HEAD`, { printCommand: true }).toString().trim()
 }
 
 const printPrefix = {
@@ -160,17 +188,78 @@ function install(deps) {
   }
 }
 
+/**
+ * 扩展名过滤器
+ * @param {string[]} extensions
+ * @returns {(file: string) => boolean}
+ */
+const filterByExtensions = (extensions) => (file) => extensions.some((ext) => file.endsWith(ext))
+
+/**
+ * 模式过滤器
+ * @param {string | string[]} pattern
+ * @returns {(file: string) => boolean}
+ */
+const filterByPattern = (pattern) => {
+  // Match everything if no pattern was given
+  if ((typeof pattern !== 'string' && !Array.isArray(pattern)) || (Array.isArray(pattern) && pattern.length === 0)) {
+    return () => true
+  }
+  const patterns = Array.isArray(pattern) ? pattern : [pattern]
+  return (file) => multimatch(path.normalize(file), patterns, { dot: true }).length > 0
+}
+
+/**
+ * 文件过滤
+ * @param {string[]} files
+ * @param {string[]} extensions
+ * @param {string | string[] | undefined} pattern
+ * @returns {string[]}
+ */
+function fileFilter(files, extensions, pattern) {
+  if (extensions && extensions.length) {
+    const filter = filterByExtensions(extensions)
+    files = files.filter(filter)
+  }
+
+  if (pattern != null) {
+    const filter = filterByPattern(pattern)
+    files = files.filter(filter)
+  }
+
+  return files
+}
+
+/**
+ * @param {string} [cwd]
+ * @returns {Promise<Config>}
+ */
+async function getConfig(cwd = process.cwd()) {
+  const p = path.join(cwd, CONFIGURE_NAME)
+  const content = (await fs.promises.readFile(p)).toString()
+  return /** @type {Config} */ (json5.parse(content))
+}
+
 module.exports = {
   UseYarn,
   getChangedFile,
+  getStagedFile,
+  getHEADref,
   print,
   execCommand,
   toPrettieredJSON,
   Pkg,
   install,
   NOOP,
+  filterByExtensions,
+  filterByPattern,
+  fileFilter,
+  getConfig,
   COMMAND_NAME,
   PACKAGE_NAME,
   PRETTIER_CONFIG_NAME,
+  CONFIGURE_NAME,
+  SCRIPT_SUPPORT_EXTENSIONS,
+  STYLE_SUPPORT_EXTENSIONS,
   pkg,
 }
