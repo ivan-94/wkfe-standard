@@ -22,6 +22,7 @@ const pkg = require('../package.json')
  * }} Config
  */
 
+const _DEV_ = process.env.NODE_ENV === 'development'
 const UseYarn = fs.existsSync('yarn.lock')
 const COMMAND_NAME = 'wkstd'
 const PACKAGE_NAME = pkg.name
@@ -215,7 +216,11 @@ const printPrefix = {
  */
 function print(level, ...args) {
   const fn = level === 'Error' ? console.error : level == 'Warn' ? console.warn : console.log
-  fn.call(console, printPrefix[level], ...args)
+  if (!_DEV_ && level === 'Debug') {
+    return
+  }
+
+  fn.call(console, printPrefix[level] + ' ', ...args)
 }
 
 /**
@@ -240,7 +245,7 @@ function execCommand(command, options = {}) {
   })
 
   if (finalOptions.printCommand) {
-    console.log('\n' + output)
+    print('Debug', '\n' + output)
   }
 
   return output
