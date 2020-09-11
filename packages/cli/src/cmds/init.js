@@ -175,6 +175,7 @@ async function eslint(ctx) {
   const config = {
     extends: [typescript ? 'wkts' : 'wk', type !== 'standard' && `wk${type}`, loose && 'wkloose'].filter(Boolean),
     plugins: [],
+    globals: {},
     rules: {},
     parserOptions: {
       ecmaFeatures:

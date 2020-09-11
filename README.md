@@ -18,3 +18,9 @@
 ## 安装
 
 ## 命令
+
+## 贡献
+
+```shell
+$ yarn bootstrap
+```

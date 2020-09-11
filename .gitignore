@@ -8,3 +8,4 @@ yarn-error.log
 .vscode
 temp
 packages/**/package-lock.json
+package-lock.json

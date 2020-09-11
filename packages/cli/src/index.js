@@ -38,6 +38,11 @@ program
 /**
  * 更新 milestone
  */
-program.command('update-milestone').description('里程碑 commit 更新')
+program
+  .command('update-milestone')
+  .description('里程碑 commit 更新')
+  .action(() => {
+    require('./cmds/update-milestone')()
+  })
 
 program.parse(process.argv)

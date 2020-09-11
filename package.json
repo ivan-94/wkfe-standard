@@ -6,9 +6,12 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "release:lerna": "lerna version --exact --no-git-tag-version"
+    "bootstrap": "lerna bootstrap",
+    "release:lerna": "lerna version --exact --no-git-tag-version",
+    "release:only": "lerna exec -- npm publish"
   },
   "devDependencies": {
+    "lerna": "^3.22.1",
     "eslint": "^7.8.1",
     "husky": "^4.3.0",
     "prettier-config-wk": "^1.0.0",
