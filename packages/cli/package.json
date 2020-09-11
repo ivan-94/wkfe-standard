@@ -1,6 +1,6 @@
 {
   "name": "wkstd",
-  "version": "1.0.0",
+  "version": "1.0.0-test",
   "description": "WakeData 前端代码规范命令行工具",
   "main": "index.js",
   "license": "MIT",
@@ -9,6 +9,14 @@
   },
   "bin": {
     "wkstd": "./bin/wkstd.js"
+  },
+  "files": [
+    "bin/*",
+    "src/**/*"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
   },
   "devDependencies": {
     "@types/babel__core": "^7.1.9",
