@@ -2,6 +2,7 @@ const path = require('path')
 const fs = require('fs')
 const inquirer = require('inquirer')
 const pret = require('prettier')
+const semver = require('semver')
 const {
   Pkg,
   print,
@@ -102,7 +103,7 @@ async function husky(ctx) {
  */
 async function prettier(ctx) {
   print('Info', '正在初始化 prettier')
-  const { pkg, cwd } = ctx
+  const { pkg, cwd, addDep } = ctx
 
   if (pkg.get('prettier') || (await pret.resolveConfigFile(cwd)) != null) {
     print('Info', 'prettier 配置已存在，跳过')
@@ -168,9 +169,7 @@ async function eslint(ctx) {
   }
 
   // 创建配置文件
-  if (typescript) {
-    print('Info', '使用 Typescript')
-  }
+  if (typescript) print('Info', '使用 Typescript')
   print('Info', `项目类型: ${type}`)
   const config = {
     extends: [typescript ? 'wkts' : 'wk', type !== 'standard' && `wk${type}`, loose && 'wkloose'].filter(Boolean),
@@ -190,7 +189,7 @@ async function eslint(ctx) {
     env: {
       browser: true,
       commonjs: moduleType === 'commonJS' ? true : undefined,
-      es2021: true,
+      es2017: true,
       node: environment === 'node' ? true : undefined,
     },
   }
@@ -209,7 +208,7 @@ async function eslint(ctx) {
     addDep({ name: PACKAGE_NAME, dev: true })
   }
 
-  if (!pkg.hasInstall('eslint')) {
+  if (!pkg.hasInstall('eslint') || !semver.satisfies(pkg.getVersion('eslint'), '>=7.0')) {
     addDep({ name: 'eslint', dev: true })
   }
 

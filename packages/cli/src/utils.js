@@ -67,16 +67,24 @@ class Pkg {
    * @param {string} name
    */
   hasInstall(name) {
+    return this.getVersion(name) != null
+  }
+
+  /**
+   * 获取指定依赖的版本号
+   * @param {string} name
+   */
+  getVersion(name) {
     const dep = this.obj.dependencies
     const devDep = this.obj.devDependencies
     if (dep && name in dep) {
-      return true
+      return dep[name]
     }
     if (devDep && name in devDep) {
-      return true
+      return devDep[name]
     }
 
-    return false
+    return null
   }
 
   async write() {

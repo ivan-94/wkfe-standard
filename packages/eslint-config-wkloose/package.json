@@ -15,7 +15,7 @@
     "eslint-config-wk": "^1.0.0-test"
   },
   "peerDependencies": {
-    "eslint": ">=7"
+    "eslint": ">=7.0"
   },
   "license": "MIT"
 }
