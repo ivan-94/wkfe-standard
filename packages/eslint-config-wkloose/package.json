@@ -1,6 +1,6 @@
 {
   "name": "eslint-config-wkloose",
-  "version": "1.0.0-test",
+  "version": "0.0.1-alpha.0",
   "description": "WakeData loose eslint rules",
   "main": "index.js",
   "files": [
@@ -12,7 +12,7 @@
   },
   "devDependencies": {
     "eslint": "^7.8.1",
-    "eslint-config-wk": "^1.0.0-test"
+    "eslint-config-wk": "0.0.1-alpha.0"
   },
   "peerDependencies": {
     "eslint": ">=7.0"
