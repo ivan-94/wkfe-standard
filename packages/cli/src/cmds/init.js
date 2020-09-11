@@ -31,6 +31,13 @@ const {
  */
 
 /**
+ * @param {string} name
+ */
+function getTemplate(name) {
+  return path.join(__dirname, `../templates/${name}`)
+}
+
+/**
  * @param {Context} ctx
  */
 async function pre(ctx) {
@@ -97,9 +104,26 @@ async function prettier(ctx) {
   if (pkg.get('prettier') || (await pret.resolveConfigFile(cwd)) != null) {
     print('Info', 'prettier 配置已存在，跳过')
   } else {
+    print('Info', '正在生成 prettier')
     pkg.set('prettier', PRETTIER_CONFIG_NAME)
-    const ignoreContent = await fs.promises.readFile(path.join(__dirname, '../templates/.prettierignore'))
-    await fs.promises.writeFile(path.join(cwd, '.prettierignore'), ignoreContent)
+    const content = await fs.promises.readFile(getTemplate('.prettierignore'))
+    await fs.promises.writeFile(path.join(cwd, '.prettierignore'), content)
+  }
+
+  // .editorconfig
+  const editorconfigPath = path.join(cwd, '.editorconfig')
+  if (!fs.existsSync(editorconfigPath)) {
+    print('Info', '正在生成 .editorconfig')
+    const content = await fs.promises.readFile(getTemplate('.editorconfig'))
+    await fs.promises.writeFile(editorconfigPath, content)
+  }
+
+  // .gitattributes
+  const gitattributesPath = path.join(cwd, '.gitattributes')
+  if (!fs.existsSync(gitattributesPath)) {
+    print('Info', '正在生成 .gitattributes')
+    const content = await fs.promises.readFile(getTemplate('.gitattributes'))
+    await fs.promises.writeFile(gitattributesPath, content)
   }
 }
 
@@ -155,7 +179,7 @@ async function eslint(ctx) {
 
   if (!fs.existsSync(ignorePath)) {
     print('Info', '正在创建 .eslintignore')
-    const ignoreContent = await fs.promises.readFile(path.join(__dirname, '../templates/.eslintignore'))
+    const ignoreContent = await fs.promises.readFile(getTemplate('.eslintignore'))
     await fs.promises.writeFile(ignorePath, ignoreContent)
   }
 

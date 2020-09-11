@@ -1,6 +1,6 @@
 # WakeData 通用 prettier 配置
 
-# Usage
+## Usage
 
 Install:
 
@@ -27,3 +27,7 @@ module.exports = {
   semi: false,
 }
 ```
+
+## Contribute
+
+如果你修改这个文件，也对应修改一下 cli/src/template/.editorconfig, 保持统一
