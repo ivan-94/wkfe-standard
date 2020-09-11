@@ -7,12 +7,15 @@ const execa = require('execa')
 const chalk = require('chalk')
 const ch = require('child_process')
 const multimatch = require('multimatch')
+const babel = require('@babel/core')
+const babelGenerate = require('@babel/generator')
 const pkg = require('../package.json')
 
 /**
  * @typedef {{name: string, version?: string, dev: boolean}} Dep
  * @typedef {{
  *   milestone: string,
+ *   milestoneAutoUpdate: boolean
  *   formatPatterns?: string | string[]
  *   scriptPatterns?: string | string[]
  *   stylePatterns?: string | string[]
@@ -139,8 +142,16 @@ function getAllCachedFiles() {
 }
 
 function getHEADref() {
+  return getRef('HEAD')
+}
+
+/**
+ * 获取指定点的 revision
+ * @param {string} point
+ */
+function getRef(point) {
   try {
-    return execCommand(`git rev-parse HEAD`, { printCommand: true }).toString().trim()
+    return execCommand(`git rev-parse ${point}`, { printCommand: true }).toString().trim()
   } catch (err) {
     return ''
   }
@@ -300,14 +311,72 @@ function fileFilter(files, extensions, pattern) {
   return files
 }
 
+function getConfigPath(cwd = process.cwd()) {
+  return path.join(cwd, CONFIGURE_NAME)
+}
+
 /**
  * @param {string} [cwd]
  * @returns {Promise<Config>}
  */
 async function getConfig(cwd = process.cwd()) {
+  const p = getConfigPath(cwd)
+  if (!fs.existsSync(p)) {
+    throw new Error(`未找到配置文件(${CONFIGURE_NAME})`)
+  }
+
+  try {
+    const content = (await fs.promises.readFile(p)).toString()
+    return /** @type {Config} */ (json5.parse(content))
+  } catch (err) {
+    throw new Error(`配置文件(${CONFIGURE_NAME})读取失败: ${err.message}`)
+  }
+}
+
+/**
+ * 更新配置文件
+ * @param {string} key
+ * @param {any} value
+ */
+async function updateConfig(key, value, cwd = process.cwd()) {
   const p = path.join(cwd, CONFIGURE_NAME)
+  if (!fs.existsSync(p)) {
+    throw new Error(`未找到配置文件(${CONFIGURE_NAME})`)
+  }
+
   const content = (await fs.promises.readFile(p)).toString()
-  return /** @type {Config} */ (json5.parse(content))
+  const res = await babel.parseAsync(`c=${content}`)
+
+  // 使用 babel 来解析 JSON 并保留注释
+  if (res) {
+    const { types: t } = babel
+    // @ts-expect-error
+    const valueAst = babel.template.ast(JSON.stringify(value)).expression
+    let found = false
+
+    babel.traverse(res, {
+      ObjectExpression: {
+        exit(path) {
+          if (!found) {
+            path.node.properties.push(t.objectProperty(t.stringLiteral(key), valueAst))
+          }
+        },
+      },
+      ObjectProperty(path) {
+        const node = path.node
+        if (t.isStringLiteral(node.key) && node.key.value === key) {
+          found = true
+          node.value = valueAst
+        }
+      },
+    })
+
+    const newcode = babelGenerate.default(res).code
+    const newContent = newcode.slice(newcode.indexOf('{'), newcode.endsWith(';') ? -1 : undefined)
+    await fs.promises.writeFile(p, newContent)
+  } else {
+    throw new Error('配置文件解析失败')
+  }
 }
 
 module.exports = {
@@ -319,6 +388,7 @@ module.exports = {
   getAllCachedFiles,
   stageFiles,
   getHEADref,
+  getRef,
   getSafeChangeableFiles,
   print,
   execCommand,
@@ -330,7 +400,9 @@ module.exports = {
   filterByExtensions,
   filterByPattern,
   fileFilter,
+  getConfigPath,
   getConfig,
+  updateConfig,
   COMMAND_NAME,
   PACKAGE_NAME,
   PRETTIER_CONFIG_NAME,

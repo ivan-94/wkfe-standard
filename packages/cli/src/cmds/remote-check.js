@@ -27,6 +27,7 @@ async function exec() {
 
   // from [gitlab-plugin](https://github.com/jenkinsci/gitlab-plugin#defined-variables)
   // TODO: jenkins ENV
+  // TODO: config.milestone 可能新于 gitlabBefore
   const prevCommit = pickAvailableRef(head, process.env.gitlabBefore, config.milestone)
   const fullCheck = prevCommit == null
   const nocheck = head === config.milestone

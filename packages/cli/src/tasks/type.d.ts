@@ -4,12 +4,17 @@ export interface Context {
    */
   files: string[]
   unstagedFiles: string[]
+  configPath: string
   config: import('../utils').Config
   cwd: string
   /**
    * 是否可以修复代码
    */
   fixable: boolean
+  /**
+   * 是否已经有任务失败
+   */
+  failed: boolean
 }
 
 /**
