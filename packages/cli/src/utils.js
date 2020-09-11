@@ -134,6 +134,21 @@ function getUnstagedFiles() {
 }
 
 /**
+ * 比对两个 commit 的新旧
+ * @param {string} a
+ * @param {string} b
+ * @returns {boolean} a 比 b 新
+ */
+function commitNewerThan(a, b) {
+  if (a === b) {
+    return false
+  }
+
+  const str = execCommand(`git diff --name-only "${a}"..."${b}"`).toString()
+  return !getLines(str).length
+}
+
+/**
  * 获取所有已提交到仓库的文件
  */
 function getAllCachedFiles() {
@@ -390,6 +405,7 @@ module.exports = {
   getHEADref,
   getRef,
   getSafeChangeableFiles,
+  commitNewerThan,
   print,
   execCommand,
   execNpmScript,
