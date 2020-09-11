@@ -309,6 +309,18 @@ eslint-config-standard@^14.1.1:
   resolved "https://registry.npm.taobao.org/eslint-config-standard/download/eslint-config-standard-14.1.1.tgz#830a8e44e7aef7de67464979ad06b406026c56ea"
   integrity sha1-gwqOROeu995nRkl5rQa0BgJsVuo=
 
+eslint-config-wk@^1.0.0-test:
+  version "1.0.0-test"
+  resolved "https://registry.npm.taobao.org/eslint-config-wk/download/eslint-config-wk-1.0.0-test.tgz#c6827e394e9b6ab04ac3b36f62bc7c3fff8de654"
+  integrity sha1-xoJ+OU6barBKw7NvYrx8P/+N5lQ=
+  dependencies:
+    eslint-config-prettier "^6.11.0"
+    eslint-config-standard "^14.1.1"
+    eslint-plugin-import "^2.22.0"
+    eslint-plugin-node "^11.1.0"
+    eslint-plugin-promise "^4.2.1"
+    eslint-plugin-standard "^4.0.1"
+
 eslint-import-resolver-node@^0.3.3:
   version "0.3.4"
   resolved "https://registry.npm.taobao.org/eslint-import-resolver-node/download/eslint-import-resolver-node-0.3.4.tgz?cache=0&sync_timestamp=1592327223893&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Feslint-import-resolver-node%2Fdownload%2Feslint-import-resolver-node-0.3.4.tgz#85ffa81942c25012d8231096ddf679c03042c717"

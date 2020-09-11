@@ -1,0 +1,21 @@
+{
+  "name": "eslint-config-wkloose",
+  "version": "1.0.0-test",
+  "description": "WakeData loose eslint rules",
+  "main": "index.js",
+  "files": [
+    "index.js"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
+  },
+  "devDependencies": {
+    "eslint": "^7.8.1",
+    "eslint-config-wk": "^1.0.0-test"
+  },
+  "peerDependencies": {
+    "eslint": ">=7"
+  },
+  "license": "MIT"
+}
