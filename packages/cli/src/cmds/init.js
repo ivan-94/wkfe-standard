@@ -1,5 +1,6 @@
 const path = require('path')
 const fs = require('fs')
+const inquirer = require('inquirer')
 const pret = require('prettier')
 const {
   Pkg,
@@ -19,14 +20,21 @@ const {
  * @typedef {import('../utils').Dep} Dep
  * @typedef {Pkg} pkg
  * @typedef {(dep: Dep) => void} addDep
+ * @typedef {'react' | 'vue' | 'taro' | 'standard'} ProjectType
+ * @typedef {{
+ *   typescript: boolean
+ *   type: ProjectType
+ *   moduleType?: 'es6' | 'commonJS'
+ *   environment: 'browser' | 'node'
+ *   loose?: boolean
+ * }} Config
  * @typedef {{
  *   pkg: pkg,
  *   addDep: addDep,
  *   onFinish: (cb: () => void) => void
  *   configurationPath: string
  *   cwd: string
- *   typescript: Boolean
- *   type: 'react' | 'vue' | 'taro' | 'standard'
+ *   config: Config
  * }} Context
  */
 
@@ -44,11 +52,6 @@ async function pre(ctx) {
   if (!isGitRepo(ctx.cwd)) {
     print('Error', '请在 git 仓库下执行该命令')
     process.exit(1)
-  }
-
-  if (ctx.pkg.hasInstall(PACKAGE_NAME) && fs.existsSync(ctx.configurationPath)) {
-    print('Warn', '已初始化，不必重复调用')
-    process.exit(0)
   }
 }
 
@@ -141,7 +144,12 @@ async function stylelint(ctx) {
  */
 async function eslint(ctx) {
   print('Info', '正在初始化 eslint')
-  const { pkg, cwd, type, typescript, addDep } = ctx
+  const {
+    pkg,
+    cwd,
+    config: { type, typescript, moduleType, environment, loose },
+    addDep,
+  } = ctx
   const bakPath = path.join(cwd, '.eslintrc.bak')
   const ignorePath = path.join(cwd, '.eslintignore')
 
@@ -165,12 +173,24 @@ async function eslint(ctx) {
   }
   print('Info', `项目类型: ${type}`)
   const config = {
-    extends: [typescript ? 'wkts' : 'wk', type !== 'standard' && `wk${type}`].filter(Boolean),
+    extends: [typescript ? 'wkts' : 'wk', type !== 'standard' && `wk${type}`, loose && 'wkloose'].filter(Boolean),
     plugins: [],
     rules: {},
+    parserOptions: {
+      ecmaFeatures:
+        type === 'react' || type === 'taro'
+          ? {
+              jsx: true,
+            }
+          : undefined,
+      ecmaVersion: 12,
+      sourceType: moduleType ? 'module' : undefined,
+    },
     env: {
       browser: true,
+      commonjs: moduleType === 'commonJS' ? true : undefined,
       es2021: true,
+      node: environment === 'node' ? true : undefined,
     },
   }
 
@@ -190,6 +210,10 @@ async function eslint(ctx) {
 
   if (!pkg.hasInstall('eslint')) {
     addDep({ name: 'eslint', dev: true })
+  }
+
+  if (typescript && !pkg.hasInstall('typescript')) {
+    addDep({ name: 'typescript', dev: true })
   }
 }
 
@@ -222,10 +246,91 @@ async function configuration(ctx) {
 }
 
 /**
- * 项目初始化
- * @param {{type?: 'react' | 'vue' | 'taro' | 'standard', typescript?: boolean}} options
+ * 获取参数
+ * @param {pkg} pkg
+ * @param {string} cwd
+ * @returns {Promise<Config>}
  */
-async function exec(options) {
+async function getOptions(pkg, cwd) {
+  const hasTsconfig = fs.existsSync(path.join(cwd, 'tsconfig.json'))
+  const defaultype = pkg.hasInstall('@tarojs/taro')
+    ? 'taro'
+    : pkg.hasInstall('react')
+    ? 'react'
+    : pkg.hasInstall('vue')
+    ? 'vue'
+    : 'standard'
+
+  const answers = await inquirer.prompt([
+    {
+      type: 'confirm',
+      name: 'typescript',
+      message: '是否启用 Typescript 检查',
+      default: hasTsconfig,
+    },
+    {
+      type: 'rawlist',
+      name: 'type',
+      message: '选择项目类型',
+      choices: [
+        { name: 'React', value: 'react' },
+        { name: 'Vue', value: 'vue' },
+        { name: 'Taro', value: 'taro' },
+        { name: 'Standard(纯JavaScript)', value: 'standard' },
+      ],
+      default: defaultype,
+    },
+    {
+      type: 'confirm',
+      name: 'loose',
+      message: '开启宽松模式(老项目过渡阶段建议开启)',
+      default: false,
+    },
+    {
+      type: 'rawlist',
+      name: 'moduleType',
+      message: '选择模块类型',
+      choices: [
+        {
+          name: 'JavaScript modules (import/export)',
+          value: 'es6',
+        },
+        {
+          name: 'CommonJS (require/exports)',
+          value: 'commonJS',
+        },
+        {
+          name: 'None of these',
+          value: '',
+        },
+      ],
+      default: 'es6',
+    },
+    {
+      type: 'rawlist',
+      name: 'environment',
+      message: '选择运行的环境',
+      choices: [
+        {
+          name: 'Browser',
+          value: 'browser',
+        },
+        {
+          name: 'Node',
+          value: 'node',
+        },
+      ],
+      default: 'browser',
+    },
+  ])
+
+  return answers
+}
+
+/**
+ * 项目初始化
+ */
+async function exec() {
   const cwd = process.cwd()
   const pkgPath = path.join(cwd, './package.json')
   const configurationPath = path.join(cwd, CONFIGURE_NAME)
@@ -241,17 +346,8 @@ async function exec(options) {
   const tasks = [pre, husky, prettier, stylelint, eslint, configuration]
   /** @type {Array<() => void>} */
   const postTasks = []
-  const typescript = options.typescript != null ? options.typescript : fs.existsSync(path.join(cwd, 'tsconfig.json'))
-  const type =
-    options.type != null
-      ? options.type
-      : pkg.hasInstall('@tarojs/taro')
-      ? 'taro'
-      : pkg.hasInstall('react')
-      ? 'react'
-      : pkg.hasInstall('vue')
-      ? 'vue'
-      : 'standard'
+
+  const config = await getOptions(pkg, cwd)
 
   /** @type {Context} */
   const ctx = {
@@ -259,9 +355,8 @@ async function exec(options) {
     addDep: (dep) => thingsNeedToInstall.push(dep),
     onFinish: (t) => postTasks.push(t),
     configurationPath,
+    config,
     cwd,
-    typescript,
-    type,
   }
 
   for (const task of tasks) {

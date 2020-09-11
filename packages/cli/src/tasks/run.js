@@ -37,8 +37,6 @@ async function run(fixable, files, unstagedFiles, tasks = defaultTasks) {
       } catch (err) {
         print('Error', `${task.name} 执行失败`, err.message)
         ctx.failed = true
-      } finally {
-        console.log('\n')
       }
     }
 
