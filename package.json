@@ -6,6 +6,9 @@
   "license": "MIT",
   "private": true,
   "prettier": "prettier-config-wk",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "release:lerna": "lerna version --exact --no-git-tag-version",

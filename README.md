@@ -1,4 +1,6 @@
-# WakeData 前端代码规范工具集
+# wkstd
+
+WakeData 前端代码规范工具集
 
 <br>
 
@@ -119,9 +121,11 @@ remote-check 和 local-check 一样，默认采用增量验证，也就说，他
 
 <br>
 
-建议通过 Issue 提交需求和问题
+建议通过 Issue 提交需求和问题. 
 
 <br>
+
+本项目依赖于 yarn, 调用下面的命令初始化依赖:
 
 ```shell
 $ yarn bootstrap
