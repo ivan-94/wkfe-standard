@@ -3,4 +3,4 @@ module.exports = {
   rules: {
     'no-empty-character-class': 2,
   },
-}
+};

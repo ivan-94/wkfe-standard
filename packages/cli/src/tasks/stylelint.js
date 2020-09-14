@@ -3,4 +3,4 @@
  */
 async function stylelint(ctx) {}
 
-module.exports = stylelint
+module.exports = stylelint;

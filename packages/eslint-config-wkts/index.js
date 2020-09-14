@@ -5,4 +5,4 @@ module.exports = {
     warnOnUnsupportedTypeScriptVersion: true,
     project: './tsconfig.json',
   },
-}
+};

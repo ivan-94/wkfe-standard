@@ -1,15 +1,15 @@
-const fs = require('fs')
-const path = require('path')
-const get = require('lodash/get')
-const set = require('lodash/set')
-const json5 = require('json5')
-const execa = require('execa')
-const chalk = require('chalk')
-const ch = require('child_process')
-const multimatch = require('multimatch')
-const babel = require('@babel/core')
-const babelGenerate = require('@babel/generator')
-const pkg = require('../package.json')
+const fs = require('fs');
+const path = require('path');
+const get = require('lodash/get');
+const set = require('lodash/set');
+const json5 = require('json5');
+const execa = require('execa');
+const chalk = require('chalk');
+const ch = require('child_process');
+const multimatch = require('multimatch');
+const babel = require('@babel/core');
+const babelGenerate = require('@babel/generator');
+const pkg = require('../package.json');
 
 /**
  * @typedef {{name: string, version?: string, dev: boolean}} Dep
@@ -22,16 +22,16 @@ const pkg = require('../package.json')
  * }} Config
  */
 
-const _DEV_ = process.env.NODE_ENV === 'development'
-const UseYarn = fs.existsSync('yarn.lock')
-const COMMAND_NAME = 'wkstd'
-const PACKAGE_NAME = pkg.name
-const PRETTIER_CONFIG_NAME = 'prettier-config-wk'
-const CONFIGURE_NAME = '.standard.jsonc'
-const SCRIPT_SUPPORT_EXTENSIONS = ['.js', '.ts', '.jsx', '.tsx', '.mjs', '.vue']
-const STYLE_SUPPORT_EXTENSIONS = ['.css', '.scss', '.sass', '.less', '.stylus']
+const _DEV_ = process.env.NODE_ENV === 'development';
+const UseYarn = fs.existsSync('yarn.lock');
+const COMMAND_NAME = 'wkstd';
+const PACKAGE_NAME = pkg.name;
+const PRETTIER_CONFIG_NAME = 'prettier-config-wk';
+const CONFIGURE_NAME = '.standard.jsonc';
+const SCRIPT_SUPPORT_EXTENSIONS = ['.js', '.ts', '.jsx', '.tsx', '.mjs', '.vue'];
+const STYLE_SUPPORT_EXTENSIONS = ['.css', '.scss', '.sass', '.less', '.stylus'];
 
-const NOOP = () => {}
+const NOOP = () => {};
 
 /**
  * package.json 读写
@@ -41,16 +41,16 @@ class Pkg {
    * @param {string} path
    */
   constructor(path) {
-    this.path = path
-    this.obj = require(path)
-    this.dirty = false
+    this.path = path;
+    this.obj = require(path);
+    this.dirty = false;
   }
   /**
    * 字段获取
    * @param {string} path
    */
   get(path) {
-    return get(this.obj, path)
+    return get(this.obj, path);
   }
 
   /**
@@ -58,8 +58,8 @@ class Pkg {
    * @param {any} value
    */
   set(path, value) {
-    set(this.obj, path, value)
-    this.dirty = true
+    set(this.obj, path, value);
+    this.dirty = true;
   }
 
   /**
@@ -67,7 +67,7 @@ class Pkg {
    * @param {string} name
    */
   hasInstall(name) {
-    return this.getVersion(name) != null
+    return this.getVersion(name) != null;
   }
 
   /**
@@ -75,23 +75,23 @@ class Pkg {
    * @param {string} name
    */
   getVersion(name) {
-    const dep = this.obj.dependencies
-    const devDep = this.obj.devDependencies
+    const dep = this.obj.dependencies;
+    const devDep = this.obj.devDependencies;
     if (dep && name in dep) {
-      return dep[name]
+      return dep[name];
     }
     if (devDep && name in devDep) {
-      return devDep[name]
+      return devDep[name];
     }
 
-    return null
+    return null;
   }
 
   async write() {
     if (!this.dirty) {
-      return
+      return;
     }
-    await fs.promises.writeFile(this.path, toPrettieredJSON(this.obj))
+    await fs.promises.writeFile(this.path, toPrettieredJSON(this.obj));
   }
 }
 
@@ -99,7 +99,7 @@ class Pkg {
  * @param {object} obj
  */
 function toPrettieredJSON(obj) {
-  return JSON.stringify(obj, undefined, 2)
+  return JSON.stringify(obj, undefined, 2);
 }
 
 /**
@@ -109,7 +109,7 @@ function getLines(str) {
   return str
     .split('\n')
     .map((i) => i.trim())
-    .filter(Boolean)
+    .filter(Boolean);
 }
 
 /**
@@ -117,29 +117,29 @@ function getLines(str) {
  * @param {string} [cwd]
  */
 function isGitRepo(cwd) {
-  return fs.existsSync(path.join(cwd || process.cwd(), '.git'))
+  return fs.existsSync(path.join(cwd || process.cwd(), '.git'));
 }
 
 /**
  * @param {string} commit
  */
 function getChangedFiles(commit) {
-  const str = execCommand(`git diff --name-only ${commit}`).toString()
-  return getLines(str)
+  const str = execCommand(`git diff --name-only ${commit}`).toString();
+  return getLines(str);
 }
 
 function getStagedFiles() {
-  const str = execCommand(`git diff --name-only --cached`).toString()
-  return getLines(str)
+  const str = execCommand(`git diff --name-only --cached`).toString();
+  return getLines(str);
 }
 
 /**
  * 获取所有未提交的文件
  */
 function getUnstagedFiles() {
-  const trackeds = execCommand(`git diff --name-only`).toString()
-  const untrackeds = execCommand(`git ls-files --others --exclude-standard`).toString()
-  return getLines(trackeds).concat(getLines(untrackeds))
+  const trackeds = execCommand(`git diff --name-only`).toString();
+  const untrackeds = execCommand(`git ls-files --others --exclude-standard`).toString();
+  return getLines(trackeds).concat(getLines(untrackeds));
 }
 
 /**
@@ -150,23 +150,23 @@ function getUnstagedFiles() {
  */
 function commitNewerThan(a, b) {
   if (a === b) {
-    return false
+    return false;
   }
 
-  const str = execCommand(`git diff --name-only "${a}"..."${b}"`).toString()
-  return !getLines(str).length
+  const str = execCommand(`git diff --name-only "${a}"..."${b}"`).toString();
+  return !getLines(str).length;
 }
 
 /**
  * 获取所有已提交到仓库的文件
  */
 function getAllCachedFiles() {
-  const str = execCommand('git ls-files --exclude-standard --cached').toString()
-  return getLines(str)
+  const str = execCommand('git ls-files --exclude-standard --cached').toString();
+  return getLines(str);
 }
 
 function getHEADref() {
-  return getRef('HEAD')
+  return getRef('HEAD');
 }
 
 /**
@@ -175,9 +175,9 @@ function getHEADref() {
  */
 function getRef(point) {
   try {
-    return execCommand(`git rev-parse ${point}`, { printCommand: true }).toString().trim()
+    return execCommand(`git rev-parse ${point}`, { printCommand: true }).toString().trim();
   } catch (err) {
-    return ''
+    return '';
   }
 }
 
@@ -185,7 +185,7 @@ function getRef(point) {
  * @param {string[]} files
  */
 function stageFiles(files) {
-  execCommand(`git add ${files.join(' ')}`, { printCommand: false })
+  execCommand(`git add ${files.join(' ')}`, { printCommand: false });
 }
 
 /**
@@ -195,20 +195,20 @@ function stageFiles(files) {
  */
 function getSafeChangeableFiles(stageds, unstageds) {
   /** @type {string[]} */
-  const safe = []
+  const safe = [];
   /** @type {string[]} */
-  const unsafe = []
+  const unsafe = [];
   for (const file of stageds) {
     if (unstageds.includes(file)) {
-      unsafe.push(file)
+      unsafe.push(file);
     } else {
-      safe.push(file)
+      safe.push(file);
     }
   }
   return {
     safe,
     unsafe,
-  }
+  };
 }
 
 const printPrefix = {
@@ -217,18 +217,18 @@ const printPrefix = {
   Warn: chalk.yellow('⚠️ 警告'),
   Info: 'ℹ️',
   Debug: '💻',
-}
+};
 /**
  * @param {'Error' | 'Warn' | 'Info' | 'Debug' | 'Success'} level
  * @param  {...any} args
  */
 function print(level, ...args) {
-  const fn = level === 'Error' ? console.error : level == 'Warn' ? console.warn : console.log
+  const fn = level === 'Error' ? console.error : level == 'Warn' ? console.warn : console.log;
   if (!_DEV_ && level === 'Debug') {
-    return
+    return;
   }
 
-  fn.call(console, printPrefix[level] + ' ', ...args)
+  fn.call(console, printPrefix[level] + ' ', ...args);
 }
 
 /**
@@ -241,22 +241,22 @@ function execCommand(command, options = {}) {
     cwd: process.cwd(),
     printCommand: true,
     ...options,
-  }
+  };
 
   if (finalOptions.printCommand) {
-    print('Debug', `$ ${command}`)
+    print('Debug', `$ ${command}`);
   }
 
   const output = ch.execSync(command, {
     cwd: finalOptions.cwd,
     stdio: ['inherit', 'pipe', 'inherit'],
-  })
+  });
 
   if (finalOptions.printCommand) {
-    print('Debug', '\n' + output)
+    print('Debug', '\n' + output);
   }
 
-  return output
+  return output;
 }
 
 /**
@@ -264,8 +264,8 @@ function execCommand(command, options = {}) {
  * @param {{cwd?: string}} options
  */
 function execNpmScript(command, options = {}) {
-  print('Debug', command)
-  return execa.commandSync(command, { preferLocal: true, cwd: options.cwd || process.cwd(), stdio: 'inherit' })
+  print('Debug', command);
+  return execa.commandSync(command, { preferLocal: true, cwd: options.cwd || process.cwd(), stdio: 'inherit' });
 }
 
 /**
@@ -274,26 +274,26 @@ function execNpmScript(command, options = {}) {
  */
 function install(deps) {
   /** @type {Dep[]} */
-  const dep = []
+  const dep = [];
   /** @type {Dep[]} */
-  const devDep = []
-  deps.forEach((i) => (i.dev ? devDep.push(i) : dep.push(i)))
+  const devDep = [];
+  deps.forEach((i) => (i.dev ? devDep.push(i) : dep.push(i)));
 
   /**
    * @param {Dep[]} list
    * @param {boolean} dev
    */
   const toCommand = (list, dev) => {
-    const pkgs = list.map((i) => (i.version ? `${i.name}@${i.version}` : i.name)).join(' ')
-    return UseYarn ? `yarn add ${pkgs} ${dev ? '-D' : ''}` : `npm install ${pkgs} ${dev ? '--save-dev' : '--save'}`
-  }
+    const pkgs = list.map((i) => (i.version ? `${i.name}@${i.version}` : i.name)).join(' ');
+    return UseYarn ? `yarn add ${pkgs} ${dev ? '-D' : ''}` : `npm install ${pkgs} ${dev ? '--save-dev' : '--save'}`;
+  };
 
   if (devDep.length) {
-    execCommand(toCommand(devDep, true), { printCommand: true })
+    execCommand(toCommand(devDep, true), { printCommand: true });
   }
 
   if (dep.length) {
-    execCommand(toCommand(dep, true), { printCommand: true })
+    execCommand(toCommand(dep, true), { printCommand: true });
   }
 }
 
@@ -302,7 +302,7 @@ function install(deps) {
  * @param {string[]} extensions
  * @returns {(file: string) => boolean}
  */
-const filterByExtensions = (extensions) => (file) => extensions.some((ext) => file.endsWith(ext))
+const filterByExtensions = (extensions) => (file) => extensions.some((ext) => file.endsWith(ext));
 
 /**
  * 模式过滤器
@@ -312,11 +312,11 @@ const filterByExtensions = (extensions) => (file) => extensions.some((ext) => fi
 const filterByPattern = (pattern) => {
   // Match everything if no pattern was given
   if ((typeof pattern !== 'string' && !Array.isArray(pattern)) || (Array.isArray(pattern) && pattern.length === 0)) {
-    return () => true
+    return () => true;
   }
-  const patterns = Array.isArray(pattern) ? pattern : [pattern]
-  return (file) => multimatch(path.normalize(file), patterns, { dot: true }).length > 0
-}
+  const patterns = Array.isArray(pattern) ? pattern : [pattern];
+  return (file) => multimatch(path.normalize(file), patterns, { dot: true }).length > 0;
+};
 
 /**
  * 文件过滤
@@ -327,20 +327,20 @@ const filterByPattern = (pattern) => {
  */
 function fileFilter(files, extensions, pattern) {
   if (extensions && extensions.length) {
-    const filter = filterByExtensions(extensions)
-    files = files.filter(filter)
+    const filter = filterByExtensions(extensions);
+    files = files.filter(filter);
   }
 
   if (pattern != null) {
-    const filter = filterByPattern(pattern)
-    files = files.filter(filter)
+    const filter = filterByPattern(pattern);
+    files = files.filter(filter);
   }
 
-  return files
+  return files;
 }
 
 function getConfigPath(cwd = process.cwd()) {
-  return path.join(cwd, CONFIGURE_NAME)
+  return path.join(cwd, CONFIGURE_NAME);
 }
 
 /**
@@ -348,16 +348,16 @@ function getConfigPath(cwd = process.cwd()) {
  * @returns {Promise<Config>}
  */
 async function getConfig(cwd = process.cwd()) {
-  const p = getConfigPath(cwd)
+  const p = getConfigPath(cwd);
   if (!fs.existsSync(p)) {
-    throw new Error(`未找到配置文件(${CONFIGURE_NAME})`)
+    throw new Error(`未找到配置文件(${CONFIGURE_NAME})`);
   }
 
   try {
-    const content = (await fs.promises.readFile(p)).toString()
-    return /** @type {Config} */ (json5.parse(content))
+    const content = (await fs.promises.readFile(p)).toString();
+    return /** @type {Config} */ (json5.parse(content));
   } catch (err) {
-    throw new Error(`配置文件(${CONFIGURE_NAME})读取失败: ${err.message}`)
+    throw new Error(`配置文件(${CONFIGURE_NAME})读取失败: ${err.message}`);
   }
 }
 
@@ -367,43 +367,43 @@ async function getConfig(cwd = process.cwd()) {
  * @param {any} value
  */
 async function updateConfig(key, value, cwd = process.cwd()) {
-  const p = path.join(cwd, CONFIGURE_NAME)
+  const p = path.join(cwd, CONFIGURE_NAME);
   if (!fs.existsSync(p)) {
-    throw new Error(`未找到配置文件(${CONFIGURE_NAME})`)
+    throw new Error(`未找到配置文件(${CONFIGURE_NAME})`);
   }
 
-  const content = (await fs.promises.readFile(p)).toString()
-  const res = await babel.parseAsync(`c=${content}`)
+  const content = (await fs.promises.readFile(p)).toString();
+  const res = await babel.parseAsync(`c=${content}`);
 
   // 使用 babel 来解析 JSON 并保留注释
   if (res) {
-    const { types: t } = babel
+    const { types: t } = babel;
     // @ts-expect-error
-    const valueAst = babel.template.ast(JSON.stringify(value)).expression
-    let found = false
+    const valueAst = babel.template.ast(JSON.stringify(value)).expression;
+    let found = false;
 
     babel.traverse(res, {
       ObjectExpression: {
         exit(path) {
           if (!found) {
-            path.node.properties.push(t.objectProperty(t.stringLiteral(key), valueAst))
+            path.node.properties.push(t.objectProperty(t.stringLiteral(key), valueAst));
           }
         },
       },
       ObjectProperty(path) {
-        const node = path.node
+        const node = path.node;
         if (t.isStringLiteral(node.key) && node.key.value === key) {
-          found = true
-          node.value = valueAst
+          found = true;
+          node.value = valueAst;
         }
       },
-    })
+    });
 
-    const newcode = babelGenerate.default(res).code
-    const newContent = newcode.slice(newcode.indexOf('{'), newcode.endsWith(';') ? -1 : undefined)
-    await fs.promises.writeFile(p, newContent)
+    const newcode = babelGenerate.default(res).code;
+    const newContent = newcode.slice(newcode.indexOf('{'), newcode.endsWith(';') ? -1 : undefined);
+    await fs.promises.writeFile(p, newContent);
   } else {
-    throw new Error('配置文件解析失败')
+    throw new Error('配置文件解析失败');
   }
 }
 
@@ -439,4 +439,4 @@ module.exports = {
   SCRIPT_SUPPORT_EXTENSIONS,
   STYLE_SUPPORT_EXTENSIONS,
   pkg,
-}
+};

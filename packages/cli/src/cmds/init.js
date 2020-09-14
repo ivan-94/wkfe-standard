@@ -1,8 +1,8 @@
-const path = require('path')
-const fs = require('fs')
-const inquirer = require('inquirer')
-const pret = require('prettier')
-const semver = require('semver')
+const path = require('path');
+const fs = require('fs');
+const inquirer = require('inquirer');
+const pret = require('prettier');
+const semver = require('semver');
 const {
   Pkg,
   print,
@@ -15,7 +15,7 @@ const {
   getHEADref,
   CONFIGURE_NAME,
   isGitRepo,
-} = require('../utils')
+} = require('../utils');
 
 /**
  * @typedef {import('../utils').Dep} Dep
@@ -43,7 +43,7 @@ const {
  * @param {string} name
  */
 function getTemplate(name) {
-  return path.join(__dirname, `../templates/${name}`)
+  return path.join(__dirname, `../templates/${name}`);
 }
 
 /**
@@ -51,8 +51,8 @@ function getTemplate(name) {
  */
 async function pre(ctx) {
   if (!isGitRepo(ctx.cwd)) {
-    print('Error', '请在 git 仓库下执行该命令')
-    process.exit(1)
+    print('Error', '请在 git 仓库下执行该命令');
+    process.exit(1);
   }
 }
 
@@ -61,39 +61,39 @@ async function pre(ctx) {
  * @param {Context} ctx
  */
 async function husky(ctx) {
-  print('Info', '正在初始化 husky')
+  print('Info', '正在初始化 husky');
 
-  const { pkg, addDep, onFinish, cwd } = ctx
-  const COMMAND = `${COMMAND_NAME} local-check`
+  const { pkg, addDep, onFinish, cwd } = ctx;
+  const COMMAND = `${COMMAND_NAME} local-check`;
 
   if (pkg.get('husky')) {
     // 已安装
-    const config = /** @type {string | void} */ (pkg.get('husky.hooks["pre-commit"]'))
+    const config = /** @type {string | void} */ (pkg.get('husky.hooks["pre-commit"]'));
     if (config) {
       // 可能冲突
-      print('Warn', `husky 已存在 pre-commit 配置，你可能需要移除旧的配置`)
+      print('Warn', `husky 已存在 pre-commit 配置，你可能需要移除旧的配置`);
       const cmds = config
         .split('&&')
         .map((i) => i.trim())
-        .filter(Boolean)
+        .filter(Boolean);
       if (!cmds.includes(COMMAND)) {
-        cmds.push(COMMAND)
-        pkg.set('husky.hooks["pre-commit"]', cmds.join(' && '))
+        cmds.push(COMMAND);
+        pkg.set('husky.hooks["pre-commit"]', cmds.join(' && '));
       }
     } else {
-      pkg.set('husky.hooks["pre-commit"]', COMMAND)
+      pkg.set('husky.hooks["pre-commit"]', COMMAND);
     }
   } else {
-    addDep({ name: 'husky', dev: true })
-    pkg.set('husky.hooks["pre-commit"]', COMMAND)
+    addDep({ name: 'husky', dev: true });
+    pkg.set('husky.hooks["pre-commit"]', COMMAND);
 
     onFinish(async () => {
       // 检查 husky 是否安装成功
-      const precommitFile = (await fs.promises.readFile(path.join(cwd, '.git/hooks/pre-commit'))).toString()
+      const precommitFile = (await fs.promises.readFile(path.join(cwd, '.git/hooks/pre-commit'))).toString();
       if (!precommitFile.includes('husky.sh')) {
-        print('Error', `husky 安装失败，可能需要手动安装`)
+        print('Error', `husky 安装失败，可能需要手动安装`);
       }
-    })
+    });
   }
 }
 
@@ -102,32 +102,32 @@ async function husky(ctx) {
  * @param {Context} ctx
  */
 async function prettier(ctx) {
-  print('Info', '正在初始化 prettier')
-  const { pkg, cwd, addDep } = ctx
+  print('Info', '正在初始化 prettier');
+  const { pkg, cwd, addDep } = ctx;
 
   if (pkg.get('prettier') || (await pret.resolveConfigFile(cwd)) != null) {
-    print('Info', 'prettier 配置已存在，跳过')
+    print('Info', 'prettier 配置已存在，跳过');
   } else {
-    print('Info', '正在生成 prettier')
-    pkg.set('prettier', PRETTIER_CONFIG_NAME)
-    const content = await fs.promises.readFile(getTemplate('.prettierignore'))
-    await fs.promises.writeFile(path.join(cwd, '.prettierignore'), content)
+    print('Info', '正在生成 prettier');
+    pkg.set('prettier', PRETTIER_CONFIG_NAME);
+    const content = await fs.promises.readFile(getTemplate('.prettierignore'));
+    await fs.promises.writeFile(path.join(cwd, '.prettierignore'), content);
   }
 
   // .editorconfig
-  const editorconfigPath = path.join(cwd, '.editorconfig')
+  const editorconfigPath = path.join(cwd, '.editorconfig');
   if (!fs.existsSync(editorconfigPath)) {
-    print('Info', '正在生成 .editorconfig')
-    const content = await fs.promises.readFile(getTemplate('.editorconfig'))
-    await fs.promises.writeFile(editorconfigPath, content)
+    print('Info', '正在生成 .editorconfig');
+    const content = await fs.promises.readFile(getTemplate('.editorconfig'));
+    await fs.promises.writeFile(editorconfigPath, content);
   }
 
   // .gitattributes
-  const gitattributesPath = path.join(cwd, '.gitattributes')
+  const gitattributesPath = path.join(cwd, '.gitattributes');
   if (!fs.existsSync(gitattributesPath)) {
-    print('Info', '正在生成 .gitattributes')
-    const content = await fs.promises.readFile(getTemplate('.gitattributes'))
-    await fs.promises.writeFile(gitattributesPath, content)
+    print('Info', '正在生成 .gitattributes');
+    const content = await fs.promises.readFile(getTemplate('.gitattributes'));
+    await fs.promises.writeFile(gitattributesPath, content);
   }
 }
 
@@ -144,33 +144,33 @@ async function stylelint(ctx) {
  * @param {Context} ctx
  */
 async function eslint(ctx) {
-  print('Info', '正在初始化 eslint')
+  print('Info', '正在初始化 eslint');
   const {
     pkg,
     cwd,
     config: { type, typescript, moduleType, environment, loose },
     addDep,
-  } = ctx
-  const bakPath = path.join(cwd, '.eslintrc.bak')
-  const ignorePath = path.join(cwd, '.eslintignore')
+  } = ctx;
+  const bakPath = path.join(cwd, '.eslintrc.bak');
+  const ignorePath = path.join(cwd, '.eslintignore');
 
   if (pkg.get('eslintConfig')) {
-    print('Warn', '已存在 eslint 配置，它们将被拷贝到 .eslintrc.bak, 请手动合并')
-    const config = pkg.get('eslintConfig')
-    pkg.set('eslintConfig', undefined)
-    await fs.promises.writeFile(bakPath, JSON.stringify(config, undefined, 2))
+    print('Warn', '已存在 eslint 配置，它们将被拷贝到 .eslintrc.bak, 请手动合并');
+    const config = pkg.get('eslintConfig');
+    pkg.set('eslintConfig', undefined);
+    await fs.promises.writeFile(bakPath, JSON.stringify(config, undefined, 2));
   } else {
-    const eslintrcPaths = ['.eslintrc.js', '.eslintrc.json', '.eslintrc']
-    const existedConfigFile = eslintrcPaths.find((p) => fs.existsSync(path.join(cwd, p)))
+    const eslintrcPaths = ['.eslintrc.js', '.eslintrc.json', '.eslintrc'];
+    const existedConfigFile = eslintrcPaths.find((p) => fs.existsSync(path.join(cwd, p)));
     if (existedConfigFile) {
-      print('Warn', '已存在 eslint 配置，它们将被拷贝到 .eslintrc.bak, 请手动合并')
-      await fs.promises.rename(path.join(cwd, existedConfigFile), bakPath)
+      print('Warn', '已存在 eslint 配置，它们将被拷贝到 .eslintrc.bak, 请手动合并');
+      await fs.promises.rename(path.join(cwd, existedConfigFile), bakPath);
     }
   }
 
   // 创建配置文件
-  if (typescript) print('Info', '使用 Typescript')
-  print('Info', `项目类型: ${type}`)
+  if (typescript) print('Info', '使用 Typescript');
+  print('Info', `项目类型: ${type}`);
   const config = {
     extends: [typescript ? 'wkts' : 'wk', type !== 'standard' && `wk${type}`, loose && 'wkloose'].filter(Boolean),
     plugins: [],
@@ -192,28 +192,28 @@ async function eslint(ctx) {
       es2017: true,
       node: environment === 'node' ? true : undefined,
     },
-  }
+  };
 
-  print('Info', '正在创建 .eslintrc.json')
-  await fs.promises.writeFile(path.join(cwd, '.eslintrc.json'), toPrettieredJSON(config))
+  print('Info', '正在创建 .eslintrc.json');
+  await fs.promises.writeFile(path.join(cwd, '.eslintrc.json'), toPrettieredJSON(config));
 
   if (!fs.existsSync(ignorePath)) {
-    print('Info', '正在创建 .eslintignore')
-    const ignoreContent = await fs.promises.readFile(getTemplate('.eslintignore'))
-    await fs.promises.writeFile(ignorePath, ignoreContent)
+    print('Info', '正在创建 .eslintignore');
+    const ignoreContent = await fs.promises.readFile(getTemplate('.eslintignore'));
+    await fs.promises.writeFile(ignorePath, ignoreContent);
   }
 
   // 安装依赖
   if (!pkg.hasInstall(PACKAGE_NAME)) {
-    addDep({ name: PACKAGE_NAME, dev: true })
+    addDep({ name: PACKAGE_NAME, dev: true });
   }
 
   if (!pkg.hasInstall('eslint') || !semver.satisfies(pkg.getVersion('eslint'), '>=7.0')) {
-    addDep({ name: 'eslint', dev: true })
+    addDep({ name: 'eslint', dev: true });
   }
 
   if (typescript && !pkg.hasInstall('typescript')) {
-    addDep({ name: 'typescript', dev: true })
+    addDep({ name: 'typescript', dev: true });
   }
 }
 
@@ -222,8 +222,8 @@ async function eslint(ctx) {
  * @param {Context} ctx
  */
 async function configuration(ctx) {
-  const { configurationPath } = ctx
-  print('Info', '正在生成配置文件 ' + CONFIGURE_NAME)
+  const { configurationPath } = ctx;
+  print('Info', '正在生成配置文件 ' + CONFIGURE_NAME);
   // 安装依赖
   const config = `{
   // 里程碑，表示从这个提交开始实施代码格式化. 主要用于远程验证，
@@ -241,8 +241,8 @@ async function configuration(ctx) {
   // 指定哪些文件将被 stylelint 格式化, 默认会格式化所有 .css, .scss, .sass, .less, .stylus
   "stylePatterns": []
 }
-`
-  await fs.promises.writeFile(configurationPath, config)
+`;
+  await fs.promises.writeFile(configurationPath, config);
 }
 
 /**
@@ -252,14 +252,14 @@ async function configuration(ctx) {
  * @returns {Promise<Config>}
  */
 async function getOptions(pkg, cwd) {
-  const hasTsconfig = fs.existsSync(path.join(cwd, 'tsconfig.json'))
+  const hasTsconfig = fs.existsSync(path.join(cwd, 'tsconfig.json'));
   const defaultype = pkg.hasInstall('@tarojs/taro')
     ? 'taro'
     : pkg.hasInstall('react')
     ? 'react'
     : pkg.hasInstall('vue')
     ? 'vue'
-    : 'standard'
+    : 'standard';
 
   const answers = await inquirer.prompt([
     {
@@ -322,32 +322,32 @@ async function getOptions(pkg, cwd) {
       ],
       default: 'browser',
     },
-  ])
+  ]);
 
-  return answers
+  return answers;
 }
 
 /**
  * 项目初始化
  */
 async function exec() {
-  const cwd = process.cwd()
-  const pkgPath = path.join(cwd, './package.json')
-  const configurationPath = path.join(cwd, CONFIGURE_NAME)
+  const cwd = process.cwd();
+  const pkgPath = path.join(cwd, './package.json');
+  const configurationPath = path.join(cwd, CONFIGURE_NAME);
 
   if (!fs.existsSync(pkgPath)) {
-    print('Error', '未找到 package.json')
-    process.exit(1)
+    print('Error', '未找到 package.json');
+    process.exit(1);
   }
 
-  const pkg = new Pkg(pkgPath)
+  const pkg = new Pkg(pkgPath);
   /** @type {Dep[]} */
-  const thingsNeedToInstall = []
-  const tasks = [pre, husky, prettier, stylelint, eslint, configuration]
+  const thingsNeedToInstall = [];
+  const tasks = [pre, husky, prettier, stylelint, eslint, configuration];
   /** @type {Array<() => void>} */
-  const postTasks = []
+  const postTasks = [];
 
-  const config = await getOptions(pkg, cwd)
+  const config = await getOptions(pkg, cwd);
 
   /** @type {Context} */
   const ctx = {
@@ -357,24 +357,24 @@ async function exec() {
     configurationPath,
     config,
     cwd,
-  }
+  };
 
   for (const task of tasks) {
-    await task(ctx)
+    await task(ctx);
   }
 
-  await pkg.write()
+  await pkg.write();
 
   // 安装依赖
   if (thingsNeedToInstall.length) {
-    print('Info', '正在安装依赖，这可能需要一点时间')
-    await install(thingsNeedToInstall)
+    print('Info', '正在安装依赖，这可能需要一点时间');
+    await install(thingsNeedToInstall);
   }
 
   // 触发已完成钩子
   for (const task of postTasks) {
-    await task()
+    await task();
   }
 }
 
-module.exports = exec
+module.exports = exec;
