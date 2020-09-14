@@ -8,6 +8,11 @@ export type Ixx = {}
 // 类型断言
 export const xx = <number>dosomthing()
 
+
+@doc
+export class MyClass {
+}
+
 export const commaDangle = {
   a: 1,
 }

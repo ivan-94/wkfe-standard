@@ -5,7 +5,9 @@ module.exports = {
     'react/self-closing-comp': 'off',
     'react/prop-types': 'off',
   },
-  parserOptions: {
-    parser: 'babel-eslint',
+  settings: {
+    react: {
+      version: 'detect',
+    },
   },
 };

@@ -7,6 +7,9 @@
 </template>
 
 <script>
+export @dec class MyClass {
+}
+
 export default {
   data: {
     foo: 'bar',

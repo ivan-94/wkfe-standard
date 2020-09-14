@@ -9,7 +9,7 @@ export function Foo() {
   return <div>helo {!!this.props.visible && <div>show</div>}</div>
 }
 
-export class Bar {
+export @hoc class Bar {
   handleClick() {}
   render() {
     return (

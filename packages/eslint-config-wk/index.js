@@ -41,4 +41,5 @@ module.exports = {
     'import-path/parent-depth': ['warn', 2],
   },
   reportUnusedDisableDirectives: true,
+  parser: 'babel-eslint',
 };
