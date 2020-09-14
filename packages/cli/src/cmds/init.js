@@ -73,7 +73,7 @@ async function husky(ctx) {
       print('Warn', `husky 已存在 pre-commit 配置，你可能需要移除旧的配置`);
       const cmds = config
         .split('&&')
-        .map((i) => i.trim())
+        .map(i => i.trim())
         .filter(Boolean);
       if (!cmds.includes(COMMAND)) {
         cmds.push(COMMAND);
@@ -108,7 +108,21 @@ async function prettier(ctx) {
     print('Info', 'prettier 配置已存在，跳过');
   } else {
     print('Info', '正在生成 prettier');
-    pkg.set('prettier', PRETTIER_CONFIG_NAME);
+
+    if (ctx.config.type !== 'taro') {
+      pkg.set('prettier', PRETTIER_CONFIG_NAME);
+    } else {
+      // taro 项目
+      const content = `module.exports = {
+  // WakeData 统一 prettier 配置
+  ...require('prettier-config-wk'),
+  // 在这里覆盖 prettier 规则
+  // taro 需要开启 JSX 单引号
+  jsxSingleQuote: true,
+};`;
+      await fs.promises.writeFile(path.join(cwd, '.prettierrc.js'), content);
+    }
+
     const content = await fs.promises.readFile(getTemplate('.prettierignore'));
     await fs.promises.writeFile(path.join(cwd, '.prettierignore'), content);
   }
@@ -160,7 +174,7 @@ async function eslint(ctx) {
     await fs.promises.writeFile(bakPath, JSON.stringify(config, undefined, 2));
   } else {
     const eslintrcPaths = ['.eslintrc.js', '.eslintrc.json', '.eslintrc'];
-    const existedConfigFile = eslintrcPaths.find((p) => fs.existsSync(path.join(cwd, p)));
+    const existedConfigFile = eslintrcPaths.find(p => fs.existsSync(path.join(cwd, p)));
     if (existedConfigFile) {
       print('Warn', '已存在 eslint 配置，它们将被拷贝到 .eslintrc.bak, 请手动合并');
       await fs.promises.rename(path.join(cwd, existedConfigFile), bakPath);
@@ -351,8 +365,8 @@ async function exec() {
   /** @type {Context} */
   const ctx = {
     pkg: pkg,
-    addDep: (dep) => thingsNeedToInstall.push(dep),
-    onFinish: (t) => postTasks.push(t),
+    addDep: dep => thingsNeedToInstall.push(dep),
+    onFinish: t => postTasks.push(t),
     configurationPath,
     config,
     cwd,
