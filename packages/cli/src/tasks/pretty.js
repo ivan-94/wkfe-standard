@@ -19,7 +19,13 @@ async function pretty(ctx) {
     unstagedFiles,
     config: { formatPatterns },
     fixable,
+    failed,
   } = ctx;
+
+  if (failed) {
+    print('Warn', '上游任务存在错误，跳过 prettier, 请修复错误后重试');
+    return;
+  }
 
   if (!fixable) {
     return;
