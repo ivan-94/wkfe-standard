@@ -242,7 +242,8 @@ async function configuration(ctx) {
   // 里程碑，表示从这个提交开始实施代码格式化. 主要用于远程验证，
   // 当CI程序无法获取到 push 的起始 commit 时，就会用 milestone 来计算变动, 
   // 如果没有提供 milestone 会进行全量检查
-  "milestone": "${getHEADref()}",
+  // 起始 milestone 可以调用 yarn wkstd update-milestone 进行更新
+  "milestone": "",
   // 是否自动更新 milestone. 只有在当前 milestone 为空或等于 HEAD^ 时才会自动更新
   "milestoneAutoUpdate": true,
   // 指定哪些文件将被格式化，默认会格式化所有 prettier 支持的文件类型
