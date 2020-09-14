@@ -29,14 +29,14 @@ async function eslint(ctx) {
 
   if (!fixable) {
     // 纯 lint
-    execNpmScript(`eslint ${filtered.join(' ')}`);
+    execNpmScript(`eslint --no-error-on-unmatched-pattern ${filtered.join(' ')}`);
     return;
   }
 
   const { safe, unsafe } = getSafeChangeableFiles(filtered, unstagedFiles);
 
   if (safe.length) {
-    execNpmScript(`eslint --fix --fix-type problem,suggestion ${safe.join(' ')}`);
+    execNpmScript(`eslint --no-error-on-unmatched-pattern --fix --fix-type problem,suggestion ${safe.join(' ')}`);
     stageFiles(safe);
   }
 
