@@ -12,6 +12,9 @@
     "registry": "https://registry.npmjs.org",
     "access": "public"
   },
+  "scripts": {
+    "lint": "eslint ./example/**/*"
+  },
   "dependencies": {
     "eslint-config-prettier": "^6.11.0",
     "eslint-config-standard": "^14.1.1",

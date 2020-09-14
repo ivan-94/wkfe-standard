@@ -6,7 +6,7 @@ export function Foo() {
     console.log(count)
   }, [])
 
-  return <div>helo</div>
+  return <div>helo {!!this.props.visible && <div>show</div>}</div>
 }
 
 export class Bar {

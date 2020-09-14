@@ -8,6 +8,10 @@ const a = {};
 
 [].map(() => {});
 
+// no-empty-function
+function foo() {
+}
+
 
 // Error 没有被处理
 run(function (err) {
