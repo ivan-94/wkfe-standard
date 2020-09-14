@@ -182,7 +182,7 @@ async function eslint(ctx) {
               jsx: true,
             }
           : undefined,
-      ecmaVersion: 12,
+      ecmaVersion: 11,
       sourceType: moduleType ? 'module' : undefined,
     },
     env: {
