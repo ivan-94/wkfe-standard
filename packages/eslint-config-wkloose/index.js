@@ -10,6 +10,8 @@ module.exports = {
     'no-new-object': 'warn',
     'no-prototype-builtins': 'warn',
     'no-sequences': 'warn',
+    'no-shadow': 'warn',
+    'no-empty': 'warn',
     'no-unneeded-ternary': 'warn',
     'no-unused-expressions': 'warn',
     'no-unused-vars': 'warn',
