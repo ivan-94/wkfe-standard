@@ -4,13 +4,18 @@
   "description": "WakeData Typescript ESLint config",
   "main": "index.js",
   "license": "MIT",
-  "scripts": {},
+  "author": "ivan-lee<carney520@hotmail.com>",
+  "scripts": {
+    "lint": "eslint ./example/**/*",
+    "lint:loose": "eslint -c .eslintrc.loose.js ./example/**/*"
+  },
   "publishConfig": {
     "registry": "https://registry.npmjs.org",
     "access": "public"
   },
   "files": [
-    "index.js"
+    "index.js",
+    "loose.js"
   ],
   "dependencies": {
     "@typescript-eslint/eslint-plugin": "^4.1.0",

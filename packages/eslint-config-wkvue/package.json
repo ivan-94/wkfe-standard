@@ -6,8 +6,14 @@
     "registry": "https://registry.npmjs.org",
     "access": "public"
   },
+  "author": "ivan-lee<carney520@hotmail.com>",
+  "scripts": {
+    "lint": "eslint ./example/**/*",
+    "lint:loose": "eslint -c .eslintrc.loose.js ./example/**/*"
+  },
   "files": [
-    "index.js"
+    "index.js",
+    "loose.js"
   ],
   "main": "index.js",
   "license": "MIT",

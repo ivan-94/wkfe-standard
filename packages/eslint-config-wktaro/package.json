@@ -8,8 +8,14 @@
     "registry": "https://registry.npmjs.org",
     "access": "public"
   },
+  "scripts": {
+    "lint": "eslint ./example/**/*",
+    "lint:loose": "eslint -c .eslintrc.loose.js ./example/**/*"
+  },
+  "author": "ivan-lee<carney520@hotmail.com>",
   "files": [
-    "index.js"
+    "index.js",
+    "loose.js"
   ],
   "dependencies": {
     "eslint-config-taro": "2.x",
