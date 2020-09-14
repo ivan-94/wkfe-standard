@@ -1,6 +1,8 @@
 module.exports = {
   extends: ['standard', 'prettier', 'prettier/standard'],
   plugins: [],
-  rules: {},
+  rules: {
+    'lines-between-class-members': 'warn',
+  },
   reportUnusedDisableDirectives: true,
 };

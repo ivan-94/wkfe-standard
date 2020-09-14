@@ -45,6 +45,7 @@ class Pkg {
     this.obj = require(path);
     this.dirty = false;
   }
+
   /**
    * 字段获取
    * @param {string} path
@@ -223,7 +224,7 @@ const printPrefix = {
  * @param  {...any} args
  */
 function print(level, ...args) {
-  const fn = level === 'Error' ? console.error : level == 'Warn' ? console.warn : console.log;
+  const fn = level === 'Error' ? console.error : level === 'Warn' ? console.warn : console.log;
   if (!_DEV_ && level === 'Debug') {
     return;
   }

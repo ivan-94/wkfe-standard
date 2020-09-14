@@ -7,7 +7,6 @@ const {
   Pkg,
   print,
   install,
-  NOOP,
   COMMAND_NAME,
   PACKAGE_NAME,
   PRETTIER_CONFIG_NAME,
@@ -103,7 +102,7 @@ async function husky(ctx) {
  */
 async function prettier(ctx) {
   print('Info', '正在初始化 prettier');
-  const { pkg, cwd, addDep } = ctx;
+  const { pkg, cwd } = ctx;
 
   if (pkg.get('prettier') || (await pret.resolveConfigFile(cwd)) != null) {
     print('Info', 'prettier 配置已存在，跳过');

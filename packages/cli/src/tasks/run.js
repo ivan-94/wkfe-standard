@@ -1,4 +1,3 @@
-const path = require('path');
 const { getConfig, print, getConfigPath } = require('../utils');
 const { defaultTasks } = require('./tasks');
 

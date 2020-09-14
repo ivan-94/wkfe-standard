@@ -19,7 +19,6 @@ async function pretty(ctx) {
     unstagedFiles,
     config: { formatPatterns },
     fixable,
-    cwd,
   } = ctx;
 
   if (!fixable) {

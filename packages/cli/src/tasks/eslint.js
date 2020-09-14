@@ -16,7 +16,6 @@ async function eslint(ctx) {
     files,
     unstagedFiles,
     fixable,
-    cwd,
     config: { scriptPatterns },
   } = ctx;
   const filtered = fileFilter(files, SCRIPT_SUPPORT_EXTENSIONS, scriptPatterns);

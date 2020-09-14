@@ -7,7 +7,7 @@ const { print, getChangedFiles, getAllCachedFiles, getHEADref, getConfig, commit
  */
 function pickAvailableRef(head, ...refs) {
   for (const ref of refs) {
-    if (ref != null && ref != '' && !ref.startsWith('00000') && ref !== head) {
+    if (ref != null && ref !== '' && !ref.startsWith('00000') && ref !== head) {
       return ref;
     }
   }
