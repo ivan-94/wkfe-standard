@@ -27,6 +27,16 @@ const UseYarn = fs.existsSync('yarn.lock');
 const COMMAND_NAME = 'wkstd';
 const PACKAGE_NAME = pkg.name;
 const PRETTIER_CONFIG_NAME = 'prettier-config-wk';
+const ESLINT_CONFIG_NAME = 'eslint-config-wk';
+const ESLINT_CONFIG_REACT_NAME = 'eslint-config-wkreact';
+const ESLINT_CONFIG_TARO_NAME = 'eslint-config-wktaro';
+const ESLINT_CONFIG_TS_NAME = 'eslint-config-wkts';
+const ESLINT_CONFIG_VUE_NAME = 'eslint-config-wkvue';
+const ESLINT_FRAMEWORK_CONFIG = {
+  react: ESLINT_CONFIG_REACT_NAME,
+  vue: ESLINT_CONFIG_VUE_NAME,
+  taro: ESLINT_CONFIG_TARO_NAME,
+};
 const CONFIGURE_NAME = '.standard.jsonc';
 const SCRIPT_SUPPORT_EXTENSIONS = ['.js', '.ts', '.jsx', '.tsx', '.mjs', '.vue'];
 const STYLE_SUPPORT_EXTENSIONS = ['.css', '.scss', '.sass', '.less', '.stylus'];
@@ -109,7 +119,7 @@ function toPrettieredJSON(obj) {
 function getLines(str) {
   return str
     .split('\n')
-    .map((i) => i.trim())
+    .map(i => i.trim())
     .filter(Boolean);
 }
 
@@ -278,15 +288,15 @@ function install(deps) {
   const dep = [];
   /** @type {Dep[]} */
   const devDep = [];
-  deps.forEach((i) => (i.dev ? devDep.push(i) : dep.push(i)));
+  deps.forEach(i => (i.dev ? devDep.push(i) : dep.push(i)));
 
   /**
    * @param {Dep[]} list
    * @param {boolean} dev
    */
   const toCommand = (list, dev) => {
-    const pkgs = list.map((i) => (i.version ? `${i.name}@${i.version}` : i.name)).join(' ');
-    return UseYarn ? `yarn add ${pkgs} ${dev ? '-D' : ''}` : `npm install ${pkgs} ${dev ? '--save-dev' : '--save'}`;
+    const pkgs = list.map(i => (i.version ? `${i.name}@${i.version}` : i.name)).join(' ');
+    return UseYarn ? `yarn add ${dev ? '-D' : ''} ${pkgs}` : `npm install ${dev ? '--save-dev' : '--save'} ${pkgs}`;
   };
 
   if (devDep.length) {
@@ -294,7 +304,7 @@ function install(deps) {
   }
 
   if (dep.length) {
-    execCommand(toCommand(dep, true), { printCommand: true });
+    execCommand(toCommand(dep, false), { printCommand: true });
   }
 }
 
@@ -303,20 +313,20 @@ function install(deps) {
  * @param {string[]} extensions
  * @returns {(file: string) => boolean}
  */
-const filterByExtensions = (extensions) => (file) => extensions.some((ext) => file.endsWith(ext));
+const filterByExtensions = extensions => file => extensions.some(ext => file.endsWith(ext));
 
 /**
  * 模式过滤器
  * @param {string | string[]} pattern
  * @returns {(file: string) => boolean}
  */
-const filterByPattern = (pattern) => {
+const filterByPattern = pattern => {
   // Match everything if no pattern was given
   if ((typeof pattern !== 'string' && !Array.isArray(pattern)) || (Array.isArray(pattern) && pattern.length === 0)) {
     return () => true;
   }
   const patterns = Array.isArray(pattern) ? pattern : [pattern];
-  return (file) => multimatch(path.normalize(file), patterns, { dot: true }).length > 0;
+  return file => multimatch(path.normalize(file), patterns, { dot: true }).length > 0;
 };
 
 /**
@@ -436,6 +446,12 @@ module.exports = {
   COMMAND_NAME,
   PACKAGE_NAME,
   PRETTIER_CONFIG_NAME,
+  ESLINT_CONFIG_NAME,
+  ESLINT_CONFIG_REACT_NAME,
+  ESLINT_CONFIG_TARO_NAME,
+  ESLINT_CONFIG_TS_NAME,
+  ESLINT_CONFIG_VUE_NAME,
+  ESLINT_FRAMEWORK_CONFIG,
   CONFIGURE_NAME,
   SCRIPT_SUPPORT_EXTENSIONS,
   STYLE_SUPPORT_EXTENSIONS,

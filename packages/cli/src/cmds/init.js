@@ -10,8 +10,10 @@ const {
   COMMAND_NAME,
   PACKAGE_NAME,
   PRETTIER_CONFIG_NAME,
+  ESLINT_CONFIG_NAME,
+  ESLINT_CONFIG_TS_NAME,
+  ESLINT_FRAMEWORK_CONFIG,
   toPrettieredJSON,
-  getHEADref,
   CONFIGURE_NAME,
   isGitRepo,
 } = require('../utils');
@@ -83,17 +85,18 @@ async function husky(ctx) {
       pkg.set('husky.hooks["pre-commit"]', COMMAND);
     }
   } else {
-    addDep({ name: 'husky', dev: true });
     pkg.set('husky.hooks["pre-commit"]', COMMAND);
-
-    onFinish(async () => {
-      // 检查 husky 是否安装成功
-      const precommitFile = (await fs.promises.readFile(path.join(cwd, '.git/hooks/pre-commit'))).toString();
-      if (!precommitFile.includes('husky.sh')) {
-        print('Error', `husky 安装失败，可能需要手动安装`);
-      }
-    });
   }
+  // 安装或更新 husky
+  addDep({ name: 'husky', dev: true });
+
+  onFinish(async () => {
+    // 检查 husky 是否安装成功
+    const precommitFile = (await fs.promises.readFile(path.join(cwd, '.git/hooks/pre-commit'))).toString();
+    if (!precommitFile.includes('husky.sh')) {
+      print('Error', `husky 安装失败，可能需要手动安装`);
+    }
+  });
 }
 
 /**
@@ -102,12 +105,13 @@ async function husky(ctx) {
  */
 async function prettier(ctx) {
   print('Info', '正在初始化 prettier');
-  const { pkg, cwd } = ctx;
+  const { pkg, cwd, addDep } = ctx;
 
   if (pkg.get('prettier') || (await pret.resolveConfigFile(cwd)) != null) {
     print('Info', 'prettier 配置已存在，跳过');
   } else {
     print('Info', '正在生成 prettier');
+    addDep({ name: PRETTIER_CONFIG_NAME, dev: true });
 
     if (ctx.config.type !== 'taro') {
       pkg.set('prettier', PRETTIER_CONFIG_NAME);
@@ -126,6 +130,8 @@ async function prettier(ctx) {
     const content = await fs.promises.readFile(getTemplate('.prettierignore'));
     await fs.promises.writeFile(path.join(cwd, '.prettierignore'), content);
   }
+  // 安装或更新 prettier
+  addDep({ name: 'prettier', dev: true });
 
   // .editorconfig
   const editorconfigPath = path.join(cwd, '.editorconfig');
@@ -185,7 +191,9 @@ async function eslint(ctx) {
   if (typescript) print('Info', '使用 Typescript');
   print('Info', `项目类型: ${type}`);
   const config = {
-    extends: [typescript ? 'wkts' : 'wk', type !== 'standard' && `wk${type}`, loose && 'wkloose'].filter(Boolean),
+    extends: [typescript ? 'wkts' : 'wk', type !== 'standard' && `wk${type}`]
+      .filter(Boolean)
+      .map(i => (loose ? `${i}/loose` : i)),
     plugins: [],
     globals: {},
     rules: {},
@@ -217,6 +225,14 @@ async function eslint(ctx) {
   }
 
   // 安装依赖
+  // 语言 eslint config
+  addDep({ name: typescript ? ESLINT_CONFIG_TS_NAME : ESLINT_CONFIG_NAME, dev: true });
+  // 框架 eslint config
+  if (type !== 'standard') {
+    addDep({ name: ESLINT_FRAMEWORK_CONFIG[type], dev: true });
+  }
+
+  // cli
   if (!pkg.hasInstall(PACKAGE_NAME)) {
     addDep({ name: PACKAGE_NAME, dev: true });
   }
