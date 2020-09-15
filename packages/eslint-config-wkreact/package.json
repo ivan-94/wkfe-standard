@@ -1,6 +1,6 @@
 {
   "name": "eslint-config-wkreact",
-  "version": "0.0.1-alpha.1",
+  "version": "0.0.1-alpha.2",
   "description": "WakeData React Eslint config",
   "main": "index.js",
   "license": "MIT",
@@ -26,7 +26,7 @@
   },
   "devDependencies": {
     "eslint": "^7.8.1",
-    "eslint-config-wk": "0.0.1-alpha.1"
+    "eslint-config-wk": "0.0.1-alpha.2"
   },
   "peerDependencies": {
     "eslint": ">=7.0"

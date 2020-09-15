@@ -1,6 +1,6 @@
 {
   "name": "wkstd",
-  "version": "0.0.1-alpha.1",
+  "version": "0.0.1-alpha.2",
   "description": "WakeData 前端代码规范命令行工具",
   "main": "index.js",
   "license": "MIT",
@@ -37,7 +37,7 @@
     "lodash": "^4.17.20",
     "multimatch": "^4.0.0",
     "prettier": "^2.1.1",
-    "prettier-config-wk": "0.0.1-alpha.1",
+    "prettier-config-wk": "0.0.1-alpha.2",
     "semver": "^7.3.2"
   },
   "peerDependencies": {
