@@ -269,7 +269,11 @@ async function configuration(ctx) {
   // 指定哪些文件将被 eslint 格式化, 默认会格式化所有 .ts, .tsx, .js, .jsx, .mjs, .vue
   "scriptPatterns": [],
   // 指定哪些文件将被 stylelint 格式化, 默认会格式化所有 .css, .scss, .sass, .less, .stylus
-  "stylePatterns": []
+  "stylePatterns": [],
+  // 扩展 eslint 参数
+  // "eslintArgs": '',
+  // "stylelintArgs": '',
+  // "prettierArgs": '' 
 }
 `;
   await fs.promises.writeFile(configurationPath, config);

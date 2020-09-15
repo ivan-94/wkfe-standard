@@ -16,7 +16,7 @@ async function eslint(ctx) {
     files,
     unstagedFiles,
     fixable,
-    config: { scriptPatterns },
+    config: { scriptPatterns, eslintArgs = '' },
   } = ctx;
   const filtered = fileFilter(files, SCRIPT_SUPPORT_EXTENSIONS, scriptPatterns);
   if (!filtered.length) {
@@ -25,18 +25,20 @@ async function eslint(ctx) {
   }
 
   print('Info', '正在执行 eslint 检查');
-  print('Debug', '变动文件: \n' + filtered.map((i) => `\t ${i}`).join('\n') + '\n');
+  print('Debug', '变动文件: \n' + filtered.map(i => `\t ${i}`).join('\n') + '\n');
 
   if (!fixable) {
     // 纯 lint
-    execNpmScript(`eslint --no-error-on-unmatched-pattern ${filtered.join(' ')}`);
+    execNpmScript(`eslint --no-error-on-unmatched-pattern ${eslintArgs} ${filtered.join(' ')}`);
     return;
   }
 
   const { safe, unsafe } = getSafeChangeableFiles(filtered, unstagedFiles);
 
   if (safe.length) {
-    execNpmScript(`eslint --no-error-on-unmatched-pattern --fix --fix-type problem,suggestion ${safe.join(' ')}`);
+    execNpmScript(
+      `eslint --no-error-on-unmatched-pattern --fix --fix-type problem,suggestion ${eslintArgs} ${safe.join(' ')}`
+    );
     stageFiles(safe);
   }
 
@@ -44,7 +46,7 @@ async function eslint(ctx) {
     print(
       'Error',
       `下列文件不能被安全地进行 eslint fix，请完成编辑并 stage(git add) 后重试: \n ${unsafe
-        .map((i) => `\t ${i}`)
+        .map(i => `\t ${i}`)
         .join('\n')}\n\n`
     );
     process.exit(1);

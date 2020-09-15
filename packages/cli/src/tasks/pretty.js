@@ -17,7 +17,7 @@ async function pretty(ctx) {
   const {
     files,
     unstagedFiles,
-    config: { formatPatterns },
+    config: { formatPatterns, prettierArgs = '' },
     fixable,
     failed,
   } = ctx;
@@ -38,20 +38,18 @@ async function pretty(ctx) {
   }
 
   print('Info', '正在执行 prettier 格式化');
-  print('Debug', '变动文件: \n' + filtered.map((i) => `\t ${i}`).join('\n') + '\n');
+  print('Debug', '变动文件: \n' + filtered.map(i => `\t ${i}`).join('\n') + '\n');
   const { safe, unsafe } = getSafeChangeableFiles(filtered, unstagedFiles);
 
   if (safe.length) {
-    execNpmScript(`prettier --write ${safe.join(' ')}`);
+    execNpmScript(`prettier --write ${prettierArgs} ${safe.join(' ')}`);
     stageFiles(safe);
   }
 
   if (unsafe.length) {
     print(
       'Error',
-      `下列文件不能被安全地格式化，请完成编辑并 stage(git add) 后重试: \n ${unsafe
-        .map((i) => `\t ${i}`)
-        .join('\n')}\n\n`
+      `下列文件不能被安全地格式化，请完成编辑并 stage(git add) 后重试: \n ${unsafe.map(i => `\t ${i}`).join('\n')}\n\n`
     );
     process.exit(1);
   }

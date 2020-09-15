@@ -19,6 +19,9 @@ const pkg = require('../package.json');
  *   formatPatterns?: string | string[]
  *   scriptPatterns?: string | string[]
  *   stylePatterns?: string | string[]
+ *   eslintArgs?: string
+ *   stylelintArgs?: string
+ *   prettierArgs?: string
  * }} Config
  */
 
