@@ -11,5 +11,6 @@ module.exports = {
     'vue/order-in-components': 'off',
     'vue/require-valid-default-prop': 'warn',
     'vue/return-in-computed-property': 'warn',
+    'vue/custom-event-name-casing': 'warn',
   },
 };
