@@ -8,7 +8,7 @@ program.description('WakeData 前端代码规范检查工具');
 program
   .command('init', {})
   .description('初始化项目')
-  .action((opt) => {
+  .action(opt => {
     const init = require('./cmds/init');
     init();
   });
@@ -43,6 +43,13 @@ program
   .description('里程碑 commit 更新')
   .action(() => {
     require('./cmds/update-milestone')();
+  });
+
+program
+  .command('update')
+  .description('升级工具链')
+  .action(() => {
+    require('./cmds/update')();
   });
 
 program.parse(process.argv);
