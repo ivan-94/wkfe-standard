@@ -135,12 +135,12 @@ function isGitRepo(cwd) {
  * @param {string} commit
  */
 function getChangedFiles(commit) {
-  const str = execCommand(`git diff --name-only ${commit}`).toString();
+  const str = execCommand(`git diff --name-only --diff-filter=ACMR ${commit}`).toString();
   return getLines(str);
 }
 
 function getStagedFiles() {
-  const str = execCommand(`git diff --name-only --cached`).toString();
+  const str = execCommand(`git diff --name-only --diff-filter=ACMR --cached`).toString();
   return getLines(str);
 }
 
