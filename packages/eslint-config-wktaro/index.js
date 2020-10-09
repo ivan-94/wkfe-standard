@@ -1,5 +1,2 @@
-module.exports = {
-  extends: ['wkreact', 'taro'],
-  plugins: [],
-  rules: {},
-};
+const { createConfig } = require('./config');
+module.exports = createConfig();

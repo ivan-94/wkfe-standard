@@ -15,7 +15,8 @@
   "author": "ivan-lee<carney520@hotmail.com>",
   "files": [
     "index.js",
-    "loose.js"
+    "loose.js",
+    "config.js"
   ],
   "dependencies": {
     "eslint-config-taro": "2.x",
@@ -23,7 +24,8 @@
   },
   "devDependencies": {
     "eslint": "^7.8.1",
-    "eslint-config-wk": "0.0.1-alpha.3"
+    "eslint-config-wk": "0.0.1-alpha.3",
+    "react": "^16.13.1"
   },
   "peerDependencies": {
     "eslint": ">=7.0"

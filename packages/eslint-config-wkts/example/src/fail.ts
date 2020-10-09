@@ -16,3 +16,11 @@ export class MyClass {
 export const commaDangle = {
   a: 1,
 }
+
+// no shadow
+const bar = 1
+function foo(bar) {
+  if (bar == 1) {
+    console.log('hello')
+  }
+}

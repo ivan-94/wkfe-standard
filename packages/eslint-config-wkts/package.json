@@ -15,7 +15,8 @@
   },
   "files": [
     "index.js",
-    "loose.js"
+    "loose.js",
+    "config.js"
   ],
   "dependencies": {
     "@typescript-eslint/eslint-plugin": "^4.1.0",

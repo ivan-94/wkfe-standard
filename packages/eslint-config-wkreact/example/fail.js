@@ -1,3 +1,4 @@
+import React from 'react'
 // React 没有提供
 
 export function Foo() {
@@ -9,8 +10,10 @@ export function Foo() {
   return <div>helo {!!this.props.visible && <div>show</div>}</div>
 }
 
-export @hoc class Bar {
+export @hoc class Bar extends React.Component {
   handleClick() {}
+  componentWillReceiveProps() {}
+
   render() {
     return (
       this.props.a == 0 && (

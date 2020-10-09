@@ -7,7 +7,8 @@
   "author": "ivan-lee<carney520@hotmail.com>",
   "files": [
     "index.js",
-    "loose.js"
+    "loose.js",
+    "config.js"
   ],
   "publishConfig": {
     "registry": "https://registry.npmjs.org",

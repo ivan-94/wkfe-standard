@@ -87,11 +87,13 @@ class ClassifyPage extends Taro.Component {
   //   navigationBarTitleText: '产品分类'
   // }
 
+  handleClick = () => {}
+
   render() {
     const { navHeight, navBackgroundColor, reportSource, showClassify, __isPageShow } = this.state
     return (
       // <Block>
-      <View data-scoped='wk-wpc-Classify' className="wk-wpc-Classify page">
+      <View data-scoped='wk-wpc-Classify' style='color: red' className="wk-wpc-Classify page" onClick={this.handleClick.bind(this, 'hello')}>
         {!!showClassify && (
           <Classify
             ref={this.classifyCOMPT}
