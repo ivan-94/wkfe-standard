@@ -1,11 +1,13 @@
-const { looseRules } = require('eslint-config-wkreact/config');
-const { looseRules: commonLooseRules } = require('eslint-config-wk/config');
+const { looseRules, rules } = require('eslint-config-wkreact/config');
+const { looseRules: commonLooseRules, rules: commonRules } = require('eslint-config-wk/config');
 
 exports.createConfig = function createConfig(loose = false) {
   return {
     extends: ['wkreact', 'taro'],
     plugins: [],
     rules: {
+      ...commonRules,
+      ...rules,
       'import/prefer-default-export': 'off',
       'react/jsx-fragments': 'error',
       'react/jsx-no-bind': 'off',
@@ -54,6 +56,15 @@ exports.createConfig = function createConfig(loose = false) {
       react: {
         pragma: 'Taro',
         version: 'detect',
+      },
+    },
+    overrides: {
+      // typescripts
+      files: ['*.ts', '*.tsx'],
+      rules: {
+        // Typescript 下有点问题
+        'no-use-before-define': 'off',
+        '@typescript-eslint/prefer-optional-chain': 'off',
       },
     },
   };

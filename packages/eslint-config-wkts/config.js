@@ -1,4 +1,4 @@
-const { looseRules } = require('eslint-config-wk/config');
+const { looseRules, rules } = require('eslint-config-wk/config');
 
 exports.createConfig = function createConfig(loose = false) {
   return {
@@ -11,13 +11,12 @@ exports.createConfig = function createConfig(loose = false) {
         // typescripts
         files: ['*.ts', '*.tsx'],
         rules: {
+          ...rules,
           // eslint no-shadow 存在问题，用 @typescript-eslint/no-shadow 取代
           'no-shadow': 'off',
           'no-unused-vars': 'off',
           'default-param-last': 'off',
           'lines-between-class-member': 'off',
-          // Typescript 下有点问题
-          'no-use-before-define': 'off',
 
           '@typescript-eslint/no-shadow': 'error',
           '@typescript-eslint/explicit-function-return-type': 'off',
@@ -30,6 +29,7 @@ exports.createConfig = function createConfig(loose = false) {
           '@typescript-eslint/default-param-last': ['warn'],
           '@typescript-eslint/promise-function-async': 'off',
           '@typescript-eslint/prefer-readonly': 'off',
+          '@typescript-eslint/lines-between-class-members': 'off',
           ...(loose ? exports.looseRules : {}),
         },
       },

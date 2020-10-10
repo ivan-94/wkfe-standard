@@ -3,13 +3,7 @@ exports.createConfig = function createConfig(loose = false) {
     extends: ['standard-react', 'plugin:react-hooks/recommended', 'prettier', 'prettier/react'],
     plugins: [],
     rules: {
-      'react/self-closing-comp': 'off',
-      'react/prop-types': 'off',
-      'react/style-prop-object': 'error',
-      'react/jsx-boolean-value': 'warn',
-      'react/no-unsafe': 'error',
-      'react/no-deprecated': 'error',
-      'react/jsx-filename-extension': ['error', { extensions: ['.js', '.jsx', '.tsx'] }],
+      ...exports.rules,
       ...(loose ? exports.looseRules : {}),
     },
     settings: {
@@ -18,6 +12,16 @@ exports.createConfig = function createConfig(loose = false) {
       },
     },
   };
+};
+
+exports.rules = {
+  'react/self-closing-comp': 'off',
+  'react/prop-types': 'off',
+  'react/style-prop-object': 'error',
+  'react/jsx-boolean-value': 'warn',
+  'react/no-unsafe': 'error',
+  'react/no-deprecated': 'error',
+  'react/jsx-filename-extension': ['error', { extensions: ['.js', '.jsx', '.tsx'] }],
 };
 
 exports.looseRules = {

@@ -5,7 +5,7 @@ namespace Foo {}
 // 使用 interface 取代
 export type Ixx = {}
 
-// 类型断言
+//类型断言
 export const xx = <number>dosomthing()
 
 
