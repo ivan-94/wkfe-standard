@@ -45,4 +45,5 @@ exports.looseRules = {
   '@typescript-eslint/no-unused-vars': 'warn',
   '@typescript-eslint/consistent-type-definitions': 'warn',
   '@typescript-eslint/no-shadow': 'warn',
+  '@typescript-eslint/naming-convention': 'warn',
 };

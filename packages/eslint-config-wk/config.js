@@ -1,5 +1,3 @@
-const SCRIPT_EXTS = ['js', 'ts', 'tsx', 'jsx', 'mjs'];
-
 exports.createConfig = function createConfig(loose = false) {
   return {
     extends: ['standard', 'prettier', 'prettier/standard'],
@@ -44,14 +42,7 @@ exports.rules = {
       noUselessIndex: true,
     },
   ],
-  'import/extensions': [
-    'warn',
-    'ignorePackages',
-    SCRIPT_EXTS.reduce((prv, cur) => {
-      prv[cur] = 'never';
-      return prv;
-    }, {}),
-  ],
+  'import/extensions': ['warn', 'never'],
   // 相对路径不要超过 3层
   'import-path/parent-depth': ['warn', 2],
 };

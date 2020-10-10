@@ -9,6 +9,7 @@ exports.createConfig = function createConfig(loose = false) {
       ...commonRules,
       ...rules,
       'import/prefer-default-export': 'off',
+      'import/no-mutable-exports': 'off',
       'react/jsx-fragments': 'error',
       'react/jsx-no-bind': 'off',
       'react/sort-comp': [
@@ -58,15 +59,17 @@ exports.createConfig = function createConfig(loose = false) {
         version: 'detect',
       },
     },
-    overrides: {
-      // typescripts
-      files: ['*.ts', '*.tsx'],
-      rules: {
-        // Typescript 下有点问题
-        'no-use-before-define': 'off',
-        '@typescript-eslint/prefer-optional-chain': 'off',
+    overrides: [
+      {
+        // typescripts
+        files: ['*.ts', '*.tsx'],
+        rules: {
+          // Typescript 下有点问题
+          'no-use-before-define': 'off',
+          '@typescript-eslint/prefer-optional-chain': 'off',
+        },
       },
-    },
+    ],
   };
 };
 
