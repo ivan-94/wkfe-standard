@@ -67,6 +67,7 @@ exports.createConfig = function createConfig(loose = false) {
           // Typescript 下有点问题
           'no-use-before-define': 'off',
           '@typescript-eslint/prefer-optional-chain': 'off',
+          '@typescript-eslint/prefer-nullish-coalescing': 'off',
         },
       },
     ],

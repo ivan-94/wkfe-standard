@@ -15,6 +15,8 @@ exports.createConfig = function createConfig(loose = false) {
           // eslint no-shadow 存在问题，用 @typescript-eslint/no-shadow 取代
           'no-shadow': 'off',
           'no-unused-vars': 'off',
+          // 对类型使用会误报
+          'no-undef': 'off',
           'default-param-last': 'off',
           'lines-between-class-member': 'off',
 
@@ -30,6 +32,10 @@ exports.createConfig = function createConfig(loose = false) {
           '@typescript-eslint/promise-function-async': 'off',
           '@typescript-eslint/prefer-readonly': 'off',
           '@typescript-eslint/lines-between-class-members': 'off',
+          'dot-notation': 'off',
+          '@typescript-eslint/array-type': 'warn',
+          '@typescript-eslint/prefer-includes': 'warn',
+          '@typescript-eslint/dot-notation': 'warn',
           ...(loose ? exports.looseRules : {}),
         },
       },
