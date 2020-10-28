@@ -75,7 +75,7 @@ async function husky(ctx) {
       print('Warn', `husky 已存在 pre-commit 配置，你可能需要移除旧的配置`);
       const cmds = config
         .split('&&')
-        .map(i => i.trim())
+        .map((i) => i.trim())
         .filter(Boolean);
       if (!cmds.includes(COMMAND)) {
         cmds.push(COMMAND);
@@ -180,7 +180,7 @@ async function eslint(ctx) {
     await fs.promises.writeFile(bakPath, JSON.stringify(config, undefined, 2));
   } else {
     const eslintrcPaths = ['.eslintrc.js', '.eslintrc.json', '.eslintrc'];
-    const existedConfigFile = eslintrcPaths.find(p => fs.existsSync(path.join(cwd, p)));
+    const existedConfigFile = eslintrcPaths.find((p) => fs.existsSync(path.join(cwd, p)));
     if (existedConfigFile) {
       print('Warn', '已存在 eslint 配置，它们将被拷贝到 .eslintrc.bak, 请手动合并');
       await fs.promises.rename(path.join(cwd, existedConfigFile), bakPath);
@@ -193,7 +193,7 @@ async function eslint(ctx) {
   const config = {
     extends: [typescript ? 'wkts' : 'wk', type !== 'standard' && `wk${type}`]
       .filter(Boolean)
-      .map(i => (loose ? `${i}/loose` : i)),
+      .map((i) => (loose ? `${i}/loose` : i)),
     plugins: [],
     globals: {},
     rules: {},
@@ -256,12 +256,16 @@ async function configuration(ctx) {
   // 安装依赖
   const config = `{
   // 里程碑，表示从这个提交开始实施代码格式化. 主要用于远程验证，
-  // 当CI程序无法获取到 push 的起始 commit 时，就会用 milestone 来计算变动, 
+  // Gerrit 项目跳过
+  // 当 CI 程序无法获取到 push 的起始 commit 时，就会用 milestone 来计算变动, 
   // 如果没有提供 milestone 会进行全量检查
   // 起始 milestone 可以调用 yarn wkstd update-milestone 进行更新
   "milestone": "",
+
   // 是否自动更新 milestone. 只有在当前 milestone 为空或等于 HEAD^ 时才会自动更新
-  "milestoneAutoUpdate": true,
+  // Gerrit 项目跳过
+  "milestoneAutoUpdate": false,
+
   // 指定哪些文件将被格式化，默认会格式化所有 prettier 支持的文件类型
   // 格式为 glob, 例如 "**/*.*(js|jsx)"、"!(*test).js"
   // 详见 multimatch
@@ -386,8 +390,8 @@ async function exec() {
   /** @type {Context} */
   const ctx = {
     pkg: pkg,
-    addDep: dep => thingsNeedToInstall.push(dep),
-    onFinish: t => postTasks.push(t),
+    addDep: (dep) => thingsNeedToInstall.push(dep),
+    onFinish: (t) => postTasks.push(t),
     configurationPath,
     config,
     cwd,

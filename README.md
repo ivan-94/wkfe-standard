@@ -110,6 +110,15 @@ wkstd 有两种代码规范验证方式，一种是本地验证(`local-check`)�
 
 <br>
 
+### Gerrit 远程验证: `wkstd gerrit-check`
+
+只对当前提交变动的文件进行验证，使用于 Gerrit 项目。用于远程 CI 环境。
+
+<br>
+<br>
+
+
+
 ### 远程验证: `wkstd remote-check`
 
 <br>

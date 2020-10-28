@@ -1,5 +1,5 @@
 const fs = require('fs');
-const path = require('path');
+const pathUtils = require('path');
 const get = require('lodash/get');
 const set = require('lodash/set');
 const json5 = require('json5');
@@ -26,6 +26,16 @@ const pkg = require('../package.json');
  */
 
 const _DEV_ = process.env.NODE_ENV === 'development';
+/**
+ * 是否为 CI 环境
+ */
+const IS_CI = !!(
+  process.env.JENKINS_URL ||
+  process.env.GITLAB_CI ||
+  process.env.GITHUB_ACTIONS ||
+  process.env.CIRCLECI ||
+  process.env.TRAVIS
+);
 const UseYarn = fs.existsSync('yarn.lock');
 const COMMAND_NAME = 'wkstd';
 const PACKAGE_NAME = pkg.name;
@@ -60,28 +70,29 @@ const NOOP = () => {};
  */
 class Pkg {
   /**
-   * @param {string} path
+   * @param {string} identifier
    */
-  constructor(path) {
-    this.path = path;
-    this.obj = require(path);
+  constructor(identifier) {
+    this.path = identifier;
+    // eslint-disable-next-line import/no-dynamic-require
+    this.obj = require(identifier);
     this.dirty = false;
   }
 
   /**
    * 字段获取
-   * @param {string} path
+   * @param {string} identifier
    */
-  get(path) {
-    return get(this.obj, path);
+  get(identifier) {
+    return get(this.obj, identifier);
   }
 
   /**
-   * @param {string} path
+   * @param {string} identifier
    * @param {any} value
    */
-  set(path, value) {
-    set(this.obj, path, value);
+  set(identifier, value) {
+    set(this.obj, identifier, value);
     this.dirty = true;
   }
 
@@ -131,7 +142,7 @@ function toPrettieredJSON(obj) {
 function getLines(str) {
   return str
     .split('\n')
-    .map(i => i.trim())
+    .map((i) => i.trim())
     .filter(Boolean);
 }
 
@@ -140,7 +151,7 @@ function getLines(str) {
  * @param {string} [cwd]
  */
 function isGitRepo(cwd) {
-  return fs.existsSync(path.join(cwd || process.cwd(), '.git'));
+  return fs.existsSync(pathUtils.join(cwd || process.cwd(), '.git'));
 }
 
 /**
@@ -272,7 +283,7 @@ function execCommand(command, options = {}) {
 
   const output = ch.execSync(command, {
     cwd: finalOptions.cwd,
-    stdio: ['inherit', 'pipe', 'inherit'],
+    stdio: ['inherit', 'pipe', _DEV_ ? 'inherit' : 'pipe'],
   });
 
   if (finalOptions.printCommand) {
@@ -300,14 +311,14 @@ function install(deps) {
   const dep = [];
   /** @type {Dep[]} */
   const devDep = [];
-  deps.forEach(i => (i.dev ? devDep.push(i) : dep.push(i)));
+  deps.forEach((i) => (i.dev ? devDep.push(i) : dep.push(i)));
 
   /**
    * @param {Dep[]} list
    * @param {boolean} dev
    */
   const toCommand = (list, dev) => {
-    const pkgs = list.map(i => (i.version ? `${i.name}@${i.version}` : i.name)).join(' ');
+    const pkgs = list.map((i) => (i.version ? `${i.name}@${i.version}` : i.name)).join(' ');
     return UseYarn ? `yarn add ${dev ? '-D' : ''} ${pkgs}` : `npm install ${dev ? '--save-dev' : '--save'} ${pkgs}`;
   };
 
@@ -325,20 +336,20 @@ function install(deps) {
  * @param {string[]} extensions
  * @returns {(file: string) => boolean}
  */
-const filterByExtensions = extensions => file => extensions.some(ext => file.endsWith(ext));
+const filterByExtensions = (extensions) => (file) => extensions.some((ext) => file.endsWith(ext));
 
 /**
  * 模式过滤器
  * @param {string | string[]} pattern
  * @returns {(file: string) => boolean}
  */
-const filterByPattern = pattern => {
+const filterByPattern = (pattern) => {
   // Match everything if no pattern was given
   if ((typeof pattern !== 'string' && !Array.isArray(pattern)) || (Array.isArray(pattern) && pattern.length === 0)) {
     return () => true;
   }
   const patterns = Array.isArray(pattern) ? pattern : [pattern];
-  return file => multimatch(path.normalize(file), patterns, { dot: true }).length > 0;
+  return (file) => multimatch(pathUtils.normalize(file), patterns, { dot: true }).length > 0;
 };
 
 /**
@@ -363,7 +374,7 @@ function fileFilter(files, extensions, pattern) {
 }
 
 function getConfigPath(cwd = process.cwd()) {
-  return path.join(cwd, CONFIGURE_NAME);
+  return pathUtils.join(cwd, CONFIGURE_NAME);
 }
 
 /**
@@ -390,7 +401,7 @@ async function getConfig(cwd = process.cwd()) {
  * @param {any} value
  */
 async function updateConfig(key, value, cwd = process.cwd()) {
-  const p = path.join(cwd, CONFIGURE_NAME);
+  const p = pathUtils.join(cwd, CONFIGURE_NAME);
   if (!fs.existsSync(p)) {
     throw new Error(`未找到配置文件(${CONFIGURE_NAME})`);
   }
@@ -455,6 +466,7 @@ module.exports = {
   getConfigPath,
   getConfig,
   updateConfig,
+  IS_CI,
   COMMAND_NAME,
   PACKAGE_NAME,
   PRETTIER_CONFIG_NAME,

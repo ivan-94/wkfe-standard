@@ -8,7 +8,7 @@ program.description('WakeData 前端代码规范检查工具');
 program
   .command('init', {})
   .description('初始化项目')
-  .action(opt => {
+  .action((opt) => {
     const init = require('./cmds/init');
     init();
   });
@@ -33,6 +33,24 @@ program
   .action(() => {
     const remoteCheck = require('./cmds/remote-check');
     remoteCheck();
+  });
+
+/**
+ * 远程gerrit验证
+ */
+program
+  .command('gerrit-check')
+  .description('远程 gerrit 检查，主要用于 CI')
+  .action(() => {
+    const remoteCheck = require('./cmds/gerrit-check');
+    remoteCheck();
+  });
+
+program
+  .command('install-commit-msg <httpUrl>')
+  .description('安装 Gerrit commit-msg Hook')
+  .action((options) => {
+    require('./cmds/install-gerrit-commit-msg')(options);
   });
 
 /**

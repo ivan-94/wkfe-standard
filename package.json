@@ -12,7 +12,11 @@
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "release:lerna": "lerna version --exact --no-git-tag-version",
-    "release:only": "lerna exec -- npm publish"
+    "release:only": "lerna exec -- npm publish",
+    "wkstd": "node ./packages/cli/bin/wkstd.js",
+    "postinstall": "npm run wkstd install-commit-msg http://gerrit.wakedata-inc.com/tools/hooks/commit-msg",
+    "gerrit-check": "npm run wkstd gerrit-check",
+    "local-check": "npm run wkstd local-check"
   },
   "devDependencies": {
     "eslint": "^7.8.1",
@@ -23,5 +27,10 @@
     "prettier-config-wk": "^1.0.0",
     "typescript": "^4.0.2"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run local-check"
+    }
+  }
 }

@@ -1,4 +1,16 @@
 {
-  "extends": "wk",
-  "rules": {}
+  "extends": ["wk"],
+  "plugins": [],
+  "globals": {},
+  "rules": {},
+  "parserOptions": {
+    "ecmaVersion": 11,
+    "sourceType": "script"
+  },
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es2017": true,
+    "node": true
+  }
 }
