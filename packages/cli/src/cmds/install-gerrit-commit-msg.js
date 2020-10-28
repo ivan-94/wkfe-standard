@@ -16,17 +16,19 @@ async function exec(url) {
     return;
   }
 
-  console.log('正在安装 commit-msg hooks');
   if (!fs.existsSync('.git/hooks')) {
     fs.mkdirSync('.git/hooks');
   }
 
-  const req = http.request(url, (res) => {
+  const downloadUrl = url + '/tools/hooks/commit-msg';
+  console.log('正在安装 commit-msg hooks: ' + downloadUrl);
+
+  const req = http.request(downloadUrl, (res) => {
     const target = fs.createWriteStream(COMMIT_MSG);
     res.pipe(target);
 
     target.on('close', () => {
-      fs.chmodSync(COMMIT_MSG, 755);
+      fs.chmodSync(COMMIT_MSG, '755');
 
       if (fs.existsSync('node_modules/husky')) {
         console.log('兼容 husky');
