@@ -19,7 +19,6 @@
     "config.js"
   ],
   "dependencies": {
-    "eslint-config-taro": "2.x",
     "eslint-config-wkreact": "0.0.1-alpha.7"
   },
   "devDependencies": {

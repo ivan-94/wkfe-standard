@@ -3,74 +3,18 @@ const { looseRules: commonLooseRules, rules: commonRules } = require('eslint-con
 
 exports.createConfig = function createConfig(loose = false) {
   return {
-    extends: ['wkreact', 'taro'],
+    extends: ['wkreact'],
     plugins: [],
     rules: {
       ...commonRules,
       ...rules,
       'import/prefer-default-export': 'off',
       'import/no-mutable-exports': 'off',
-      'react/jsx-fragments': 'error',
-      'react/jsx-no-bind': 'off',
-      'react/sort-comp': [
-        'warn',
-        {
-          order: [
-            '/^config/',
-            'type-annotations',
-            'static-variables',
-            'static-methods',
-            'instance-variables',
-            'computed',
-            'lifecycles',
-            '/^on.+$/',
-            'everything-else',
-            '/^render.+$/',
-            'render',
-          ],
-          groups: {
-            computed: ['getters', 'setters'],
-            lifecycles: [
-              'constructor',
-              'componentWillPreload',
-              'componentWillMount',
-              'componentDidMount',
-              'componentWillReceiveProps',
-              'shouldComponentUpdate',
-              'componentWillUpdate',
-              'componentDidUpdate',
-              'componentWillUnmount',
-              'componentDidShow',
-              'componentDidHide',
-              'componentDidCatchError',
-              'componentDidNotFound',
-            ],
-          },
-        },
-      ],
-      'react/no-deprecated': 'error',
+      'react/jsx-no-bind': "warn",
       ...(loose ? commonLooseRules : {}),
       ...(loose ? looseRules : {}),
       ...(loose ? exports.looseRules : {}),
     },
-    settings: {
-      react: {
-        pragma: 'Taro',
-        version: 'detect',
-      },
-    },
-    overrides: [
-      {
-        // typescripts
-        files: ['*.ts', '*.tsx'],
-        rules: {
-          // Typescript 下有点问题
-          'no-use-before-define': 'off',
-          '@typescript-eslint/prefer-optional-chain': 'off',
-          '@typescript-eslint/prefer-nullish-coalescing': 'off',
-        },
-      },
-    ],
   };
 };
 

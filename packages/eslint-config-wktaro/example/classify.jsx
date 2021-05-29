@@ -103,6 +103,8 @@ class ClassifyPage extends Taro.Component {
           />
         )}
 
+        <View style={_safe_style({color: 'red'})}></View>
+
         <HoverCart isPageShow={__isPageShow}></HoverCart>
       </View>
       // </Block>
