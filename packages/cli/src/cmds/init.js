@@ -16,6 +16,7 @@ const {
   toPrettieredJSON,
   CONFIGURE_NAME,
   isGitRepo,
+  execNpmScript,
 } = require('../utils');
 
 /**
@@ -282,11 +283,15 @@ async function eslint(ctx) {
  * @param {Context} ctx
  */
 async function configuration(ctx) {
-  const { pkg, config, configurationPath } = ctx;
+  const { pkg, config, configurationPath, onFinish } = ctx;
 
   // Gerrit 支持
   if (config.gerritSupport) {
     pkg.set('scripts.postinstall', `npm run wkstd install-commit-msg ${config.gerritHost}`);
+
+    onFinish(() => {
+      execNpmScript('npm run postinstall');
+    });
   }
 
   print('Info', '正在生成配置文件 ' + CONFIGURE_NAME);
@@ -465,7 +470,7 @@ async function exec() {
   if (thingsNeedToInstall.length) {
     print('Info', '正在安装依赖，这可能需要一点时间');
     print('Info', `待安装依赖：${thingsNeedToInstall.map((i) => i.name).join(', ')}`);
-    await install(thingsNeedToInstall);
+    await install(thingsNeedToInstall, { ignoreScripts: config.gerritSupport });
   }
 
   // 触发已完成钩子

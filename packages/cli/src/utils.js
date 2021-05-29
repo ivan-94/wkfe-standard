@@ -305,8 +305,9 @@ function execNpmScript(command, options = {}) {
 /**
  * 安装依赖
  * @param {Dep[]} deps
+ * @param {{ignoreScripts?: boolean}} options
  */
-function install(deps) {
+function install(deps, options = {}) {
   /** @type {Dep[]} */
   const dep = [];
   /** @type {Dep[]} */
@@ -319,7 +320,9 @@ function install(deps) {
    */
   const toCommand = (list, dev) => {
     const pkgs = list.map((i) => (i.version ? `${i.name}@${i.version}` : i.name)).join(' ');
-    return UseYarn ? `yarn add ${dev ? '-D' : ''} ${pkgs}` : `npm install ${dev ? '--save-dev' : '--save'} ${pkgs}`;
+    return UseYarn
+      ? `yarn add ${dev ? '-D' : ''} ${options.ignoreScripts ? '--ignore-scripts' : ''} ${pkgs}`
+      : `npm install ${dev ? '--save-dev' : '--save'} ${options.ignoreScripts ? '--ignore-scripts' : ''} ${pkgs}`;
   };
 
   if (devDep.length) {
