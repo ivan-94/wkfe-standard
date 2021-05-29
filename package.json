@@ -14,7 +14,6 @@
     "release:lerna": "lerna version --exact --no-git-tag-version",
     "release:only": "lerna exec -- npm publish",
     "wkstd": "node ./packages/cli/bin/wkstd.js",
-    "postinstall": "npm run wkstd install-commit-msg http://gerrit.wakedata-inc.com",
     "gerrit-check": "npm run wkstd gerrit-check",
     "local-check": "npm run wkstd local-check"
   },

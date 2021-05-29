@@ -2214,6 +2214,8 @@ color-convert@^1.9.0:
   version "1.9.3"
   resolved "https://registry.npm.taobao.org/color-convert/download/color-convert-1.9.3.tgz#bb71850690e1f136567de629d2d5471deda4c1e8"
   integrity sha1-u3GFBpDh8TZWfeYp0tVHHe2kweg=
+  dependencies:
+    color-name "1.1.3"
 
 color-convert@^2.0.1:
   version "2.0.1"
@@ -6003,6 +6005,11 @@ prelude-ls@^1.2.1:
   version "1.2.1"
   resolved "https://registry.npm.taobao.org/prelude-ls/download/prelude-ls-1.2.1.tgz#debc6489d7a6e6b0e7611888cec880337d316396"
   integrity sha1-3rxkidem5rDnYRiIzsiAM30xY5Y=
+
+prettier-config-wk@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.nlark.com/prettier-config-wk/download/prettier-config-wk-1.0.0.tgz#67132caff28e97f25f2cfa2a00c379c24a48dcfe"
+  integrity sha1-ZxMsr/KOl/JfLPoqAMN5wkpI3P4=
 
 prettier-linter-helpers@^1.0.0:
   version "1.0.0"

@@ -29,7 +29,10 @@ const {
  *   moduleType?: 'es6' | 'commonJS'
  *   environment: 'browser' | 'node'
  *   loose?: boolean
+ *   gerritSupport: boolean
+ *   gerritHost: string
  * }} Config
+ *
  * @typedef {{
  *   pkg: pkg,
  *   addDep: addDep,
@@ -92,9 +95,13 @@ async function husky(ctx) {
 
   onFinish(async () => {
     // 检查 husky 是否安装成功
-    const precommitFile = (await fs.promises.readFile(path.join(cwd, '.git/hooks/pre-commit'))).toString();
-    if (!precommitFile.includes('husky.sh')) {
-      print('Error', `husky 安装失败，可能需要手动安装`);
+    try {
+      const precommitFile = (await fs.promises.readFile(path.join(cwd, '.git/hooks/pre-commit'))).toString();
+      if (!precommitFile.includes('husky.sh')) {
+        print('Error', `husky 安装失败，可能需要手动安装`);
+      }
+    } catch (err) {
+      print('Error', `husky 安装失败，可能需要手动安装`, err.message);
     }
   });
 }
@@ -251,13 +258,19 @@ async function eslint(ctx) {
  * @param {Context} ctx
  */
 async function configuration(ctx) {
-  const { configurationPath } = ctx;
+  const { pkg, config, configurationPath } = ctx;
+
+  // Gerrit 支持
+  if (config.gerritSupport) {
+    pkg.set('scripts.postinstall', `npm run wkstd install-commit-msg ${config.gerritHost}`);
+  }
+
   print('Info', '正在生成配置文件 ' + CONFIGURE_NAME);
   // 安装依赖
-  const config = `{
+  const content = `{
   // 里程碑，表示从这个提交开始实施代码格式化. 主要用于远程验证，
   // Gerrit 项目跳过
-  // 当 CI 程序无法获取到 push 的起始 commit 时，就会用 milestone 来计算变动, 
+  // 当 CI 程序无法获取到 push 的起始 commit 时，就会用 milestone 来计算变动,
   // 如果没有提供 milestone 会进行全量检查
   // 起始 milestone 可以调用 yarn wkstd update-milestone 进行更新
   "milestone": "",
@@ -277,10 +290,10 @@ async function configuration(ctx) {
   // 扩展 eslint 参数
   // "eslintArgs": '',
   // "stylelintArgs": '',
-  // "prettierArgs": '' 
+  // "prettierArgs": ''
 }
 `;
-  await fs.promises.writeFile(configurationPath, config);
+  await fs.promises.writeFile(configurationPath, content);
 }
 
 /**
@@ -360,6 +373,26 @@ async function getOptions(pkg, cwd) {
       ],
       default: 'browser',
     },
+    {
+      type: 'confirm',
+      name: 'gerritSupport',
+      message: '是否支持 Gerrit',
+      default: true,
+    },
+    {
+      type: 'input',
+      name: 'gerritHost',
+      /**
+       *
+       * @param {Config} ans
+       * @returns
+       */
+      when: (ans) => {
+        return ans.gerritSupport;
+      },
+      message: '请输入 Gerrit 服务器地址',
+      default: 'http://gerrit.wakedata-inc.com',
+    },
   ]);
 
   return answers;
@@ -385,6 +418,7 @@ async function exec() {
   /** @type {Array<() => void>} */
   const postTasks = [];
 
+  // 获取初始化参数
   const config = await getOptions(pkg, cwd);
 
   /** @type {Context} */
