@@ -162,11 +162,35 @@ async function prettier(ctx) {
  * @param {Context} ctx
  */
 async function stylelint(ctx) {
-  // TODO:
+  print('Info', '正在初始化 stylelint');
+  const {
+    config: { type },
+    addDep,
+    cwd,
+  } = ctx;
+  const configPath = path.join(cwd, '.stylelintrc.js');
+  const configName = type === 'taro' ? 'stylelint-config-wktaro' : 'stylelint-config-wk';
+  const config = `
+/**
+ * Stylelint 配置
+ * 详细配置规则见: https://stylelint.io/user-guide/configure
+ */
+module.exports = {
+  extends: ['${configName}'],
+  rules: {},
+  // 文件忽略
+  ignoreFiles: [],
+}
+`;
+
+  print('Info', '正在创建 .stylelintrc.js');
+  await fs.promises.writeFile(configPath, config);
+  addDep({ name: configName, dev: true });
+  addDep({ name: 'stylelint', dev: true });
 }
 
 /**
- * stylelint 初始化
+ * eslint 初始化
  * @param {Context} ctx
  */
 async function eslint(ctx) {
@@ -440,6 +464,7 @@ async function exec() {
   // 安装依赖
   if (thingsNeedToInstall.length) {
     print('Info', '正在安装依赖，这可能需要一点时间');
+    print('Info', `待安装依赖：${thingsNeedToInstall.map((i) => i.name).join(', ')}`);
     await install(thingsNeedToInstall);
   }
 
