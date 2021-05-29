@@ -45,6 +45,8 @@ const ESLINT_CONFIG_REACT_NAME = 'eslint-config-wkreact';
 const ESLINT_CONFIG_TARO_NAME = 'eslint-config-wktaro';
 const ESLINT_CONFIG_TS_NAME = 'eslint-config-wkts';
 const ESLINT_CONFIG_VUE_NAME = 'eslint-config-wkvue';
+const STYLELINT_CONFIG_WK = 'stylelint-config-wk';
+const STYLELINT_CONFIG_WKTARO = 'stylelint-config-wktaro';
 const ESLINT_FRAMEWORK_CONFIG = {
   react: ESLINT_CONFIG_REACT_NAME,
   vue: ESLINT_CONFIG_VUE_NAME,
@@ -58,10 +60,24 @@ const SCOPE_PACKAGES = [
   ESLINT_CONFIG_TS_NAME,
   ESLINT_CONFIG_VUE_NAME,
   PRETTIER_CONFIG_NAME,
+  STYLELINT_CONFIG_WK,
+  STYLELINT_CONFIG_WKTARO,
 ];
 const CONFIGURE_NAME = '.standard.jsonc';
 const SCRIPT_SUPPORT_EXTENSIONS = ['.js', '.ts', '.jsx', '.tsx', '.mjs', '.vue'];
-const STYLE_SUPPORT_EXTENSIONS = ['.css', '.scss', '.sass', '.less', '.stylus'];
+const STYLE_SUPPORT_EXTENSIONS = [
+  '.css',
+  '.scss',
+  '.sass',
+  '.less',
+  '.stylus',
+  '.vue',
+  '.html',
+  '.js',
+  '.ts',
+  '.jsx',
+  '.tsx',
+];
 
 const NOOP = () => {};
 
@@ -77,6 +93,20 @@ class Pkg {
     // eslint-disable-next-line import/no-dynamic-require
     this.obj = require(identifier);
     this.dirty = false;
+  }
+
+  /**
+   * @param {string} name
+   */
+  removeDep(name) {
+    if (this.obj.dependencies) {
+      delete this.obj.dependencies[name];
+      this.dirty = true;
+    }
+    if (this.obj.devDependencies) {
+      delete this.obj.devDependencies[name];
+      this.dirty = true;
+    }
   }
 
   /**
@@ -119,6 +149,13 @@ class Pkg {
     }
 
     return null;
+  }
+
+  async refresh() {
+    delete require.cache[this.path];
+    // eslint-disable-next-line import/no-dynamic-require
+    this.obj = require(this.path);
+    this.dirty = false;
   }
 
   async write() {
@@ -268,7 +305,7 @@ function print(level, ...args) {
 /**
  *
  * @param {string} command
- * @param {{cwd?: string, printCommand?: boolean}} options
+ * @param {{cwd?: string, printCommand?: boolean, inherit?: boolean}} options
  */
 function execCommand(command, options = {}) {
   const finalOptions = {
@@ -278,12 +315,12 @@ function execCommand(command, options = {}) {
   };
 
   if (finalOptions.printCommand) {
-    print('Debug', `$ ${command}`);
+    print('Info', `$ ${command}`);
   }
 
   const output = ch.execSync(command, {
     cwd: finalOptions.cwd,
-    stdio: ['inherit', 'pipe', _DEV_ ? 'inherit' : 'pipe'],
+    stdio: ['inherit', finalOptions.inherit ? 'inherit' : 'pipe', _DEV_ || finalOptions.inherit ? 'inherit' : 'pipe'],
   });
 
   if (finalOptions.printCommand) {
@@ -326,11 +363,11 @@ function install(deps, options = {}) {
   };
 
   if (devDep.length) {
-    execCommand(toCommand(devDep, true), { printCommand: true });
+    execCommand(toCommand(devDep, true), { printCommand: true, inherit: true });
   }
 
   if (dep.length) {
-    execCommand(toCommand(dep, false), { printCommand: true });
+    execCommand(toCommand(dep, false), { printCommand: true, inherit: true });
   }
 }
 

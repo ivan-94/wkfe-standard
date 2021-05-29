@@ -92,7 +92,7 @@ async function husky(ctx) {
     pkg.set('husky.hooks["pre-commit"]', COMMAND);
   }
   // 安装或更新 husky
-  addDep({ name: 'husky', dev: true });
+  addDep({ name: 'husky', dev: true, version: '4.*' });
 
   onFinish(async () => {
     // 检查 husky 是否安装成功
@@ -168,8 +168,11 @@ async function stylelint(ctx) {
     config: { type },
     addDep,
     cwd,
+    pkg,
   } = ctx;
+
   const configPath = path.join(cwd, '.stylelintrc.js');
+  const ignorePath = path.join(cwd, '.stylelintignore');
   const configName = type === 'taro' ? 'stylelint-config-wktaro' : 'stylelint-config-wk';
   const config = `
 /**
@@ -178,16 +181,26 @@ async function stylelint(ctx) {
  */
 module.exports = {
   extends: ['${configName}'],
-  rules: {},
-  // 文件忽略
-  ignoreFiles: [],
+  rules: {}
 }
 `;
 
   print('Info', '正在创建 .stylelintrc.js');
   await fs.promises.writeFile(configPath, config);
+
+  if (!fs.existsSync(ignorePath)) {
+    print('Info', '正在创建 .stylelintignore');
+    const ignoreContent = await fs.promises.readFile(getTemplate('.stylelintignore'));
+    await fs.promises.writeFile(ignorePath, ignoreContent);
+  }
+
   addDep({ name: configName, dev: true });
   addDep({ name: 'stylelint', dev: true });
+
+  if (type === 'taro') {
+    pkg.removeDep('stylelint-config-taro-rn');
+    pkg.removeDep('stylelint-taro-rn');
+  }
 }
 
 /**
@@ -287,9 +300,10 @@ async function configuration(ctx) {
 
   // Gerrit 支持
   if (config.gerritSupport) {
-    pkg.set('scripts.postinstall', `npm run wkstd install-commit-msg ${config.gerritHost}`);
-
-    onFinish(() => {
+    onFinish(async () => {
+      pkg.refresh();
+      pkg.set('scripts.postinstall', `wkstd install-commit-msg ${config.gerritHost}`);
+      await pkg.write();
       execNpmScript('npm run postinstall');
     });
   }
@@ -314,7 +328,7 @@ async function configuration(ctx) {
   "formatPatterns": [],
   // 指定哪些文件将被 eslint 格式化, 默认会格式化所有 .ts, .tsx, .js, .jsx, .mjs, .vue
   "scriptPatterns": [],
-  // 指定哪些文件将被 stylelint 格式化, 默认会格式化所有 .css, .scss, .sass, .less, .stylus
+  // 指定哪些文件将被 stylelint 格式化, 默认会格式化 stylelint 支持的所有文件类型 .css, .scss, .sass, .less, .stylus, .vue, .html、.js、.jsx、.ts、.tsx
   "stylePatterns": [],
   // 扩展 eslint 参数
   // "eslintArgs": '',
@@ -470,12 +484,16 @@ async function exec() {
   if (thingsNeedToInstall.length) {
     print('Info', '正在安装依赖，这可能需要一点时间');
     print('Info', `待安装依赖：${thingsNeedToInstall.map((i) => i.name).join(', ')}`);
-    await install(thingsNeedToInstall, { ignoreScripts: config.gerritSupport });
+    await install(thingsNeedToInstall);
   }
 
   // 触发已完成钩子
   for (const task of postTasks) {
-    await task();
+    try {
+      await task();
+    } catch (err) {
+      print('Warn', err);
+    }
   }
 }
 
