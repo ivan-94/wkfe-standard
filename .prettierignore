@@ -1,3 +1,4 @@
 **/example/**/*
+!**/example/**/*.css
 *.md
 node_modules

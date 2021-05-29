@@ -1,0 +1,22 @@
+{
+  "name": "stylelint-config-wktaro",
+  "version": "1.0.0",
+  "description": "Taro 项目样式规范",
+  "main": "index.js",
+  "scripts": {
+    "test": "stylelint 'example/**/*.css'"
+  },
+  "author": "ivan-94",
+  "devDependencies": {
+    "stylelint": "^13.13.1"
+  },
+  "dependencies": {
+    "stylelint-config-taro-rn": "^3.2.10",
+    "stylelint-config-wk": "*",
+    "stylelint-taro-rn": "^3.2.10"
+  },
+  "peerDependencies": {
+    "stylelint": "^13.13.0"
+  },
+  "license": "MIT"
+}

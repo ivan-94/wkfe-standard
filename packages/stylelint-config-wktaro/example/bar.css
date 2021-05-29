@@ -1,0 +1,10 @@
+a {
+  color: red;
+}
+
+.test:hover {
+  color: blue;
+}
+.test input[type='text'] {
+  color: red;
+}

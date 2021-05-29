@@ -1,0 +1,26 @@
+{
+  "name": "stylelint-config-wk",
+  "version": "1.0.0",
+  "description": "惟客数据通用样式规则",
+  "main": "index.js",
+  "files": [
+    "index.js"
+  ],
+  "scripts": {
+    "test": "stylelint 'example/**/*.css'"
+  },
+  "author": "ivan-94",
+  "license": "MIT",
+  "devDependencies": {
+    "stylelint": "^13.13.1"
+  },
+  "dependencies": {
+    "stylelint-config-prettier": "^8.0.2",
+    "stylelint-config-sass-guidelines": "^8.0.0",
+    "stylelint-config-standard": "^22.0.0",
+    "stylelint-prettier": "^1.2.0"
+  },
+  "peerDependencies": {
+    "stylelint": "^13.13.0"
+  }
+}

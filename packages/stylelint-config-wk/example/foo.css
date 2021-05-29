@@ -1,0 +1,31 @@
+a {
+  -webkit-transform: translateX(10px);
+}
+
+/* 重复选择器 */
+a {
+  color: pink !important;
+}
+
+@-webkit-keyframes anim {
+  0% {
+    opacity: 0;
+  }
+}
+::-moz-placeholder {
+  color: #f00;
+}
+.property-prefix {
+  -webkit-transition: none;
+}
+.value-prefix {
+  display: -webkit-flex;
+}
+
+.zerounit {
+  margin: 0px;
+}
+
+#id-selector {
+  color: #f00;
+}
