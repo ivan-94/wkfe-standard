@@ -137,6 +137,7 @@ class Pkg {
   /**
    * 获取指定依赖的版本号
    * @param {string} name
+   * @returns {string|null}
    */
   getVersion(name) {
     const dep = this.obj.dependencies;
@@ -179,7 +180,7 @@ function toPrettieredJSON(obj) {
 function getLines(str) {
   return str
     .split('\n')
-    .map((i) => i.trim())
+    .map(i => i.trim())
     .filter(Boolean);
 }
 
@@ -349,14 +350,14 @@ function install(deps, options = {}) {
   const dep = [];
   /** @type {Dep[]} */
   const devDep = [];
-  deps.forEach((i) => (i.dev ? devDep.push(i) : dep.push(i)));
+  deps.forEach(i => (i.dev ? devDep.push(i) : dep.push(i)));
 
   /**
    * @param {Dep[]} list
    * @param {boolean} dev
    */
   const toCommand = (list, dev) => {
-    const pkgs = list.map((i) => (i.version ? `${i.name}@${i.version}` : i.name)).join(' ');
+    const pkgs = list.map(i => (i.version ? `${i.name}@${i.version}` : i.name)).join(' ');
     return UseYarn
       ? `yarn add ${dev ? '-D' : ''} ${options.ignoreScripts ? '--ignore-scripts' : ''} ${pkgs}`
       : `npm install ${dev ? '--save-dev' : '--save'} ${options.ignoreScripts ? '--ignore-scripts' : ''} ${pkgs}`;
@@ -376,20 +377,20 @@ function install(deps, options = {}) {
  * @param {string[]} extensions
  * @returns {(file: string) => boolean}
  */
-const filterByExtensions = (extensions) => (file) => extensions.some((ext) => file.endsWith(ext));
+const filterByExtensions = extensions => file => extensions.some(ext => file.endsWith(ext));
 
 /**
  * 模式过滤器
  * @param {string | string[]} pattern
  * @returns {(file: string) => boolean}
  */
-const filterByPattern = (pattern) => {
+const filterByPattern = pattern => {
   // Match everything if no pattern was given
   if ((typeof pattern !== 'string' && !Array.isArray(pattern)) || (Array.isArray(pattern) && pattern.length === 0)) {
     return () => true;
   }
   const patterns = Array.isArray(pattern) ? pattern : [pattern];
-  return (file) => multimatch(pathUtils.normalize(file), patterns, { dot: true }).length > 0;
+  return file => multimatch(pathUtils.normalize(file), patterns, { dot: true }).length > 0;
 };
 
 /**

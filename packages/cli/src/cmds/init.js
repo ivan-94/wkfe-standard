@@ -216,6 +216,15 @@ async function eslint(ctx) {
     config: { type, typescript, moduleType, environment, loose },
     addDep,
   } = ctx;
+
+  // Taro 2.x 保留 ESLint 配置
+  if (type === 'taro') {
+    const version = pkg.getVersion('@tarojs/taro');
+    if (version && version.startsWith('2.')) {
+      return;
+    }
+  }
+
   const bakPath = path.join(cwd, '.eslintrc.bak');
   const ignorePath = path.join(cwd, '.eslintignore');
 
