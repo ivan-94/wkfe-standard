@@ -270,6 +270,20 @@ async function eslint(ctx) {
     await fs.promises.writeFile(ignorePath, ignoreContent);
   }
 
+  // 移除不必要的依赖
+  [
+    '@typescript-eslint/eslint-plugin',
+    '@typescript-eslint/parser',
+    'babel-eslint',
+    'eslint-config-taro',
+    'eslint-plugin-taro',
+    'eslint-plugin-import',
+    'eslint-plugin-react',
+    'eslint-plugin-react-hooks',
+  ].forEach(m => {
+    pkg.removeDep(m);
+  });
+
   // 安装依赖
   // 语言 eslint config
   addDep({ name: typescript ? ESLINT_CONFIG_TS_NAME : ESLINT_CONFIG_NAME, dev: true });
