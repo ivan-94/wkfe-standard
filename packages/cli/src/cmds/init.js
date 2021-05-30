@@ -217,6 +217,16 @@ async function eslint(ctx) {
     addDep,
   } = ctx;
 
+  // @ts-expect-error
+  if (!pkg.hasInstall('eslint') || !semver.satisfies(pkg.getVersion('eslint'), '>=7.0')) {
+    addDep({ name: 'eslint', dev: true });
+  }
+
+  // cli
+  if (!pkg.hasInstall(PACKAGE_NAME)) {
+    addDep({ name: PACKAGE_NAME, dev: true });
+  }
+
   // Taro 2.x 保留 ESLint 配置
   if (type === 'taro') {
     const version = pkg.getVersion('@tarojs/taro');
@@ -299,15 +309,6 @@ async function eslint(ctx) {
   // 框架 eslint config
   if (type !== 'standard') {
     addDep({ name: ESLINT_FRAMEWORK_CONFIG[type], dev: true });
-  }
-
-  // cli
-  if (!pkg.hasInstall(PACKAGE_NAME)) {
-    addDep({ name: PACKAGE_NAME, dev: true });
-  }
-
-  if (!pkg.hasInstall('eslint') || !semver.satisfies(pkg.getVersion('eslint'), '>=7.0')) {
-    addDep({ name: 'eslint', dev: true });
   }
 
   if (typescript && !pkg.hasInstall('typescript')) {
