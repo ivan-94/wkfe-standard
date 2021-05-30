@@ -1,8 +1,15 @@
 {
   "name": "stylelint-config-wktaro",
-  "version": "1.0.0",
+  "version": "0.0.1-alpha.9",
   "description": "Taro 项目样式规范",
   "main": "index.js",
+  "files": [
+    "index.js"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
+  },
   "scripts": {
     "test": "stylelint 'example/**/*.css'"
   },
@@ -12,7 +19,7 @@
   },
   "dependencies": {
     "stylelint-config-taro-rn": "^3.2.10",
-    "stylelint-config-wk": "*",
+    "stylelint-config-wk": "0.0.1-alpha.9",
     "stylelint-taro-rn": "^3.2.10"
   },
   "peerDependencies": {
