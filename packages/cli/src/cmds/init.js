@@ -165,7 +165,7 @@ async function prettier(ctx) {
 async function stylelint(ctx) {
   print('Info', '正在初始化 stylelint');
   const {
-    config: { type },
+    config: { type, loose },
     addDep,
     cwd,
     pkg,
@@ -181,7 +181,8 @@ async function stylelint(ctx) {
  */
 module.exports = {
   extends: ['${configName}'],
-  rules: {}
+  rules: {},
+  ${loose ? `// 宽松模式\n  defaultSeverity: 'warning',` : ''}
 }
 `;
 
