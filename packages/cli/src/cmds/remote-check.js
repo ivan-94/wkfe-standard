@@ -51,7 +51,7 @@ async function exec() {
     print('Info', `将检查 HEAD(${head}) -> ${prevCommit} 之间变动的文件`);
   }
 
-  await run(false, changed, []);
+  await run({ fixable: false, files: changed, unstagedFiles: [] });
 }
 
 module.exports = exec;

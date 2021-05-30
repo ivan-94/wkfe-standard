@@ -79,7 +79,7 @@ async function husky(ctx) {
       print('Warn', `husky 已存在 pre-commit 配置，你可能需要移除旧的配置`);
       const cmds = config
         .split('&&')
-        .map((i) => i.trim())
+        .map(i => i.trim())
         .filter(Boolean);
       if (!cmds.includes(COMMAND)) {
         cmds.push(COMMAND);
@@ -226,7 +226,7 @@ async function eslint(ctx) {
     await fs.promises.writeFile(bakPath, JSON.stringify(config, undefined, 2));
   } else {
     const eslintrcPaths = ['.eslintrc.js', '.eslintrc.json', '.eslintrc'];
-    const existedConfigFile = eslintrcPaths.find((p) => fs.existsSync(path.join(cwd, p)));
+    const existedConfigFile = eslintrcPaths.find(p => fs.existsSync(path.join(cwd, p)));
     if (existedConfigFile) {
       print('Warn', '已存在 eslint 配置，它们将被拷贝到 .eslintrc.bak, 请手动合并');
       await fs.promises.rename(path.join(cwd, existedConfigFile), bakPath);
@@ -239,7 +239,7 @@ async function eslint(ctx) {
   const config = {
     extends: [typescript ? 'wkts' : 'wk', type !== 'standard' && `wk${type}`]
       .filter(Boolean)
-      .map((i) => (loose ? `${i}/loose` : i)),
+      .map(i => (loose ? `${i}/loose` : i)),
     plugins: [],
     globals: {},
     rules: {},
@@ -379,7 +379,7 @@ async function getOptions(pkg, cwd) {
       type: 'confirm',
       name: 'loose',
       message: '开启宽松模式(老项目过渡阶段建议开启)',
-      default: false,
+      default: true,
     },
     {
       type: 'rawlist',
@@ -431,7 +431,7 @@ async function getOptions(pkg, cwd) {
        * @param {Config} ans
        * @returns
        */
-      when: (ans) => {
+      when: ans => {
         return ans.gerritSupport;
       },
       message: '请输入 Gerrit 服务器地址',
@@ -468,8 +468,8 @@ async function exec() {
   /** @type {Context} */
   const ctx = {
     pkg: pkg,
-    addDep: (dep) => thingsNeedToInstall.push(dep),
-    onFinish: (t) => postTasks.push(t),
+    addDep: dep => thingsNeedToInstall.push(dep),
+    onFinish: t => postTasks.push(t),
     configurationPath,
     config,
     cwd,
@@ -484,7 +484,7 @@ async function exec() {
   // 安装依赖
   if (thingsNeedToInstall.length) {
     print('Info', '正在安装依赖，这可能需要一点时间');
-    print('Info', `待安装依赖：${thingsNeedToInstall.map((i) => i.name).join(', ')}`);
+    print('Info', `待安装依赖：${thingsNeedToInstall.map(i => i.name).join(', ')}`);
     await install(thingsNeedToInstall);
   }
 

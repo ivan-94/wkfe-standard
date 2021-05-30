@@ -7,6 +7,7 @@ export interface Context {
   configPath: string;
   config: import('../utils').Config;
   cwd: string;
+  ignoreFailed: boolean;
   /**
    * 是否可以修复代码
    */

@@ -20,9 +20,10 @@ async function pretty(ctx) {
     config: { formatPatterns, prettierArgs = '' },
     fixable,
     failed,
+    ignoreFailed,
   } = ctx;
 
-  if (failed) {
+  if (failed && !ignoreFailed) {
     print('Warn', '上游任务存在错误，跳过 prettier, 请修复错误后重试');
     return;
   }

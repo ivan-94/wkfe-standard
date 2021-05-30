@@ -10,8 +10,8 @@ async function exec() {
   const start = getRef('HEAD^') ? 'HEAD^' : '4b825dc642cb6eb9a060e54bf8d69288fbee4904';
   const changeds = getChangedFiles(start);
   print('Info', '正在进行 Gerrit 代码规范检查');
-  print('Info', '变动文件:\n\n', ...changeds.map((i) => `\t ${i}\n`));
-  await run(false, changeds, []);
+  print('Info', '变动文件:\n\n', ...changeds.map(i => `\t ${i}\n`));
+  await run({ fixable: false, files: changeds, unstagedFiles: [] });
 }
 
 module.exports = exec;

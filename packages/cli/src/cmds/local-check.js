@@ -4,7 +4,7 @@ const { getStagedFiles, getUnstagedFiles } = require('../utils');
 async function exec() {
   const stagedFiles = getStagedFiles();
   const unstagedFiles = getUnstagedFiles();
-  await run(true, stagedFiles, unstagedFiles);
+  await run({ fixable: true, files: stagedFiles, unstagedFiles });
 }
 
 module.exports = exec;

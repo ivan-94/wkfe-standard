@@ -3,12 +3,15 @@ const { defaultTasks } = require('./tasks');
 
 /**
  * 执行任务
- * @param {boolean} fixable 是否可以进行修复
- * @param {string[]} files
- * @param {string[]} unstagedFiles
- * @param {Array<import('./type').Task>} tasks
+ * @param {{
+ *   fixable: boolean
+ *   files: string[],
+ *   unstagedFiles: string[], // 未提交的文件
+ *   ignoreFailed?: boolean   // 是否忽略上游错误
+ *   tasks?: Array<import('./type').Task>
+ * }} param
  */
-async function run(fixable, files, unstagedFiles, tasks = defaultTasks) {
+async function run({ fixable, files, unstagedFiles, ignoreFailed, tasks = defaultTasks }) {
   try {
     const cwd = process.cwd();
     const configPath = getConfigPath(cwd);
@@ -20,6 +23,7 @@ async function run(fixable, files, unstagedFiles, tasks = defaultTasks) {
       cwd,
       configPath,
       fixable,
+      ignoreFailed,
       failed: false,
     };
 

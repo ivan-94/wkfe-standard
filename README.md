@@ -95,6 +95,23 @@ $ npx wkstd init
 ```
 
 <br>
+<br>
+
+### 自动修复: `wkstd fix <pattern>`
+
+修复支持自动修复的问题, **建议在 wkstd init** 之后执行一次:
+
+<br>
+
+```shell
+$ wkstd fix src/**/*
+```
+
+
+<br>
+<br>
+
+
 
 ### 本地验证:  `wkstd local-check`
 
@@ -129,6 +146,13 @@ remote-check 和 local-check 一样，默认采用增量验证，也就说，他
 
 配和 Jenkins 的用法见[这篇文档](https://www.notion.so/Lint-714245be386a42a78120b7711e2c44a5)
 
+
+<br>
+<br>
+
+### 升级: `wkstd update`
+
+升级 wkstd 相关依赖
 
 <br>
 <br>
