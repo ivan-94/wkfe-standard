@@ -13,5 +13,9 @@ tester.run('wxapi', rule, {
       code: `Taro.previewImage({urls: []});`,
       errors: [{ message: '请统一使用 wxApi.* 来使用 Taro API' }],
     },
+    {
+      code: `my.previewImage({urls: []});`,
+      errors: [{ message: '请统一使用 wxApi.* 来使用 Taro API' }],
+    },
   ],
 });
