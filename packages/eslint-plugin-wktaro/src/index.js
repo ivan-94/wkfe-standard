@@ -15,6 +15,7 @@ module.exports = {
         'wktaro/wxapi': 'error',
         'wktaro/css-module': 'error',
         'wktaro/dataset': 'error',
+        'wktaro/redux-connect': 'error',
       },
     },
   },

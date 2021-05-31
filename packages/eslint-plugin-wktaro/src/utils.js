@@ -64,9 +64,9 @@ const App = (props) => {
  * @param {string[]} tests
  * @returns
  */
-function testValid(tests) {
+function testValid(tests, raw = false) {
   return tests.map((code) => ({
-    code: testComponent(code),
+    code: raw ? code : testComponent(code),
     parser: require.resolve('babel-eslint'),
     parserOptions,
   }));
@@ -78,9 +78,9 @@ function testValid(tests) {
  * @param {string[]} tests
  * @returns
  */
-function testInvalid(message, tests) {
+function testInvalid(message, tests, raw = false) {
   return tests.map((code) => ({
-    code: testComponent(code),
+    code: raw ? code : testComponent(code),
     errors: [{ message }],
     parser: require.resolve('babel-eslint'),
     parserOptions,

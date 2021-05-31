@@ -1,5 +1,6 @@
 module.exports = {
   wxapi: require('./wxapi'),
-  'css-module': require('./css-module'),
   dataset: require('./dataset'),
+  'css-module': require('./css-module'),
+  'redux-connect': require('./redux-connect'),
 };
