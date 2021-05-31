@@ -19,7 +19,8 @@
     "config.js"
   ],
   "dependencies": {
-    "eslint-config-wkreact": "0.0.1-alpha.9"
+    "eslint-config-wkreact": "0.0.1-alpha.9",
+    "eslint-plugin-wktaro": "0.0.1-alpha.9"
   },
   "devDependencies": {
     "eslint": "^7.8.1",
