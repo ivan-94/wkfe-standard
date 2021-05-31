@@ -347,8 +347,11 @@ const GLOBAL_OBJECT = new Set(['Taro', 'wx', 'qq', 'tt', 'swan', 'my', 'jd']);
 
 const STYLE_EXTS = ['.scss', 'css'];
 
+const DATA_SET_WHITE_LIST = new Set(['data-scoped', 'data-fixme']);
+
 module.exports = {
   API_LIST,
   GLOBAL_OBJECT,
   STYLE_EXTS,
+  DATA_SET_WHITE_LIST,
 };

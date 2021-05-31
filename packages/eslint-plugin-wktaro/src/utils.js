@@ -65,9 +65,10 @@ const App = (props) => {
  * @returns
  */
 function testValid(tests) {
-  return tests.map(code => ({
+  return tests.map((code) => ({
     code: testComponent(code),
-    parser: 'babel-eslint',
+    parser: require.resolve('babel-eslint'),
+    parserOptions,
   }));
 }
 
@@ -78,10 +79,11 @@ function testValid(tests) {
  * @returns
  */
 function testInvalid(message, tests) {
-  return tests.map(code => ({
+  return tests.map((code) => ({
     code: testComponent(code),
     errors: [{ message }],
-    parser: 'babel-eslint',
+    parser: require.resolve('babel-eslint'),
+    parserOptions,
   }));
 }
 

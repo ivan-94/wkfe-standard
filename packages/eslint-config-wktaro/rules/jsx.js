@@ -1,22 +1,19 @@
-const htmlTags = require('../html-tags')
+const htmlTags = require('../html-tags');
 
-const forbidElements = htmlTags.map(tag => {
+const forbidElements = htmlTags.map((tag) => {
   return {
     element: tag.element,
-    message: '在 Taro 中无法使用 HTML 标签。'
-  }
-})
+    message: '在 Taro 中无法使用 HTML 标签。',
+  };
+});
 
 module.exports = {
   parserOptions: {
     ecmaFeatures: {
-      jsx: true
-    }
+      jsx: true,
+    },
   },
-  plugins: [
-    'react',
-    'react-hooks'
-  ],
+  plugins: ['react', 'react-hooks'],
 
   // View link below for react rules documentation
   // https://github.com/yannickcr/eslint-plugin-react#list-of-supported-rules
@@ -105,10 +102,13 @@ module.exports = {
 
     // Enforce PascalCase for user-defined JSX components
     // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-pascal-case.md
-    'react/jsx-pascal-case': ['error', {
-      allowAllCaps: true,
-      ignore: []
-    }],
+    'react/jsx-pascal-case': [
+      'error',
+      {
+        allowAllCaps: true,
+        ignore: [],
+      },
+    ],
 
     // Enforce curly braces or disallow unnecessary curly braces in JSX props and/or children
     // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-curly-brace-presence.md
@@ -140,25 +140,31 @@ module.exports = {
 
     // Enforce propTypes declarations alphabetical sorting
     // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/sort-prop-types.md
-    'react/sort-prop-types': ['off', {
-      ignoreCase: true,
-      callbacksLast: false,
-      requiredFirst: false
-    }],
+    'react/sort-prop-types': [
+      'off',
+      {
+        ignoreCase: true,
+        callbacksLast: false,
+        requiredFirst: false,
+      },
+    ],
 
     // Deprecated in favor of react/jsx-sort-props
     'react/jsx-sort-prop-types': 'off',
 
     // Enforce props alphabetical sorting
     // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-sort-props.md
-    'react/jsx-sort-props': ['off', {
-      ignoreCase: true,
-      callbacksLast: false,
-      shorthandFirst: false,
-      shorthandLast: false,
-      noSortAlphabetically: false,
-      reservedFirst: true
-    }],
+    'react/jsx-sort-props': [
+      'off',
+      {
+        ignoreCase: true,
+        callbacksLast: false,
+        shorthandFirst: false,
+        shorthandLast: false,
+        noSortAlphabetically: false,
+        reservedFirst: true,
+      },
+    ],
 
     // Prevent usage of deprecated methods
     // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/no-deprecated.md
@@ -208,6 +214,10 @@ module.exports = {
     // Prevent problem with children and props.dangerouslySetInnerHTML
     // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/no-danger-with-children.md
     'react/no-danger-with-children': 'error',
+
+    // 限制最大嵌套深度，减少非递归模板平台问题
+    // https://github.com/yannickcr/eslint-plugin-react
+    'react/jsx-max-depth': ['error', { max: 10 }],
 
     // // Prevent unused propType definitions
     // // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/no-unused-prop-types.md
@@ -262,14 +272,14 @@ module.exports = {
     //   propTypeNames: ['bool', 'mutuallyExclusiveTrueProps'],
     //   rule: '^(is|has)[A-Z]([A-Za-z0-9]?)+',
     // }],
-    'react/boolean-prop-naming': 'off'
+    'react/boolean-prop-naming': 'off',
   },
 
   settings: {
     propWrapperFunctions: [
       'forbidExtraProps', // https://www.npmjs.com/package/airbnb-prop-types
       'exact', // https://www.npmjs.com/package/prop-types-exact
-      'Object.freeze' // https://tc39.github.io/ecma262/#sec-object.freeze
-    ]
-  }
-}
+      'Object.freeze', // https://tc39.github.io/ecma262/#sec-object.freeze
+    ],
+  },
+};

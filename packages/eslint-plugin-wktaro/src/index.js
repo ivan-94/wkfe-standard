@@ -14,6 +14,7 @@ module.exports = {
       rules: {
         'wktaro/wxapi': 'error',
         'wktaro/css-module': 'error',
+        'wktaro/dataset': 'error',
       },
     },
   },
