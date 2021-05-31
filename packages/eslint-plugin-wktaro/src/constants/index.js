@@ -345,7 +345,10 @@ const API_LIST = new Set([
 
 const GLOBAL_OBJECT = new Set(['Taro', 'wx', 'qq', 'tt', 'swan', 'my', 'jd']);
 
+const STYLE_EXTS = ['.scss', 'css'];
+
 module.exports = {
   API_LIST,
   GLOBAL_OBJECT,
+  STYLE_EXTS,
 };

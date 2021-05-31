@@ -21,6 +21,9 @@ function buildDocsMeta(description, rule) {
   };
 }
 
+/**
+ * @type {import('eslint').Linter.ParserOptions}
+ */
 const parserOptions = {
   ecmaVersion: 2018,
   sourceType: 'module',

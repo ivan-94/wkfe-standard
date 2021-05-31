@@ -1,20 +1,5 @@
 const rules = require('./rules/index');
 
-/**
- * @param {object} rules
- * @returns
- */
-function configureAsError(rules) {
-  return Object.keys(rules)
-    .map(key => [`wktaro/${key}`, 2])
-    .reduce((prev, cur) => {
-      // @ts-ignore
-      prev[cur[0]] = cur[1];
-
-      return prev;
-    }, {});
-}
-
 module.exports = {
   rules: rules,
   configs: {
@@ -26,8 +11,10 @@ module.exports = {
           jsx: true,
         },
       },
-      rules: configureAsError(rules),
+      rules: {
+        'wktaro/wxapi': 'error',
+        'wktaro/css-module': 'error',
+      },
     },
   },
 };
-
