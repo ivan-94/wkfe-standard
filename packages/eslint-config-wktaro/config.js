@@ -3,7 +3,9 @@ const { looseRules: commonLooseRules, rules: commonRules } = require('eslint-con
 
 exports.createConfig = function createConfig(loose = false) {
   return {
-    extends: ['wkreact', 'plugin:wktaro/recommended'],
+    extends: ['wkreact', 'plugin:wktaro/recommended'].concat(
+      ['./rules/jsx', './rules/imports', './rules/variables'].map(require.resolve)
+    ),
     plugins: [],
     rules: {
       ...commonRules,

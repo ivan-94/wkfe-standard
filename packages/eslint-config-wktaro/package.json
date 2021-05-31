@@ -16,7 +16,9 @@
   "files": [
     "index.js",
     "loose.js",
-    "config.js"
+    "config.js",
+    "rules",
+    "html-tags.js"
   ],
   "dependencies": {
     "eslint-config-wkreact": "0.0.1-alpha.9",
