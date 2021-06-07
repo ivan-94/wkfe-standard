@@ -1,6 +1,6 @@
 {
   "name": "eslint-config-wktaro",
-  "version": "0.0.1-alpha.9",
+  "version": "0.1.0",
   "description": "WakeData Eslint config for Taro",
   "main": "index.js",
   "license": "MIT",
@@ -21,12 +21,12 @@
     "html-tags.js"
   ],
   "dependencies": {
-    "eslint-config-wkreact": "0.0.1-alpha.9",
-    "eslint-plugin-wktaro": "*"
+    "eslint-config-wkreact": "0.1.0",
+    "eslint-plugin-wktaro": "0.1.0"
   },
   "devDependencies": {
     "eslint": "^7.8.1",
-    "eslint-config-wk": "0.0.1-alpha.9",
+    "eslint-config-wk": "0.1.0",
     "react": "^16.13.1"
   },
   "peerDependencies": {

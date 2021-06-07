@@ -1,6 +1,6 @@
 {
   "name": "eslint-config-wkvue",
-  "version": "0.0.1-alpha.9",
+  "version": "0.1.0",
   "description": "WakeDate Eslint Config for Vue",
   "publishConfig": {
     "registry": "https://registry.npmjs.org",
@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "eslint": "^7.8.1",
-    "eslint-config-wk": "0.0.1-alpha.9"
+    "eslint-config-wk": "0.1.0"
   },
   "peerDependencies": {
     "eslint": ">=7.0"

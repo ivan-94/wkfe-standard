@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-wktaro",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Wakedata Taro ESlint rules",
   "main": "src/index.js",
   "files": [
@@ -9,6 +9,10 @@
   ],
   "scripts": {
     "test": "mocha -R progress __tests__/*.js"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
   },
   "peerDependencies": {
     "babel-eslint": ">=10.0",

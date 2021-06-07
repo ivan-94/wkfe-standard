@@ -1,6 +1,6 @@
 {
   "name": "stylelint-config-wktaro",
-  "version": "0.0.1-alpha.9",
+  "version": "0.1.0",
   "description": "Taro 项目样式规范",
   "main": "index.js",
   "files": [
@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "stylelint-config-taro-rn": "^3.2.10",
-    "stylelint-config-wk": "0.0.1-alpha.9",
+    "stylelint-config-wk": "0.1.0",
     "stylelint-taro-rn": "^3.2.10"
   },
   "peerDependencies": {
