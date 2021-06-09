@@ -10,10 +10,8 @@ exports.createConfig = function createConfig(loose = false) {
     rules: {
       ...commonRules,
       ...rules,
-      'import/prefer-default-export': 'off',
-      'import/no-mutable-exports': 'off',
-      'react/jsx-no-bind': 'warn',
       'react/react-in-jsx-scope': 'off',
+      'react/style-prop-object': 'error',
       ...(loose ? commonLooseRules : {}),
       ...(loose ? looseRules : {}),
       ...(loose ? exports.looseRules : {}),
@@ -22,5 +20,5 @@ exports.createConfig = function createConfig(loose = false) {
 };
 
 exports.looseRules = {
-  'import/first': 'warn',
+  'wktaro/css-module': 'warn',
 };
