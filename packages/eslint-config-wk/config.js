@@ -1,7 +1,6 @@
 exports.createConfig = function createConfig(loose = false) {
   return {
-    extends: ['standard', 'prettier', 'prettier/standard'],
-    plugins: ['import-path'],
+    extends: ['standard', 'prettier'],
     rules: {
       ...exports.rules,
       ...(loose ? exports.looseRules : {}),
@@ -43,8 +42,6 @@ exports.rules = {
     },
   ],
   'import/extensions': ['warn', 'never'],
-  // 相对路径不要超过 3层
-  'import-path/parent-depth': ['warn', 2],
   'import/no-dynamic-require': 'error',
   'import/no-commonjs': 'warn',
 };

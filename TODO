@@ -1,2 +1,3 @@
 [] Taro 3.x ESLint 规范整理
 [] git submodule 支持
+[] 禁止混合 ESModule & CommonJS

@@ -2,7 +2,7 @@ const { looseRules, rules } = require('eslint-config-wk/config');
 
 exports.createConfig = function createConfig(loose = false) {
   return {
-    extends: ['wk', 'standard-with-typescript', 'prettier', 'prettier/@typescript-eslint'],
+    extends: ['wk', 'standard-with-typescript', 'prettier'],
     rules: {
       ...(loose ? looseRules : {}),
     },
