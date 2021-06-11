@@ -6,6 +6,19 @@ exports.createConfig = function createConfig(loose = false) {
       ...exports.rules,
       ...(loose ? exports.looseRules : {}),
     },
+    parser: require.resolve('@babel/eslint-parser'),
+    parserOptions: {
+      sourceType: 'module',
+      requireConfigFile: false,
+      ecmaFeatures: {
+        jsx: true,
+      },
+      babelOptions: {
+        parserOpts: {
+          plugins: ['jsx', ['decorators', { decoratorsBeforeExport: true }]],
+        },
+      },
+    },
   };
 };
 

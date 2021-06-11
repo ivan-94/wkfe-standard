@@ -7,7 +7,11 @@
 </template>
 
 <script>
-export @dec class MyClass {
+// export @dec class MyClass {
+// }
+
+@dec
+export  class MyClass {
 }
 
 export default {

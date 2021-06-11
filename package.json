@@ -19,11 +19,11 @@
   },
   "devDependencies": {
     "eslint": "^7.8.1",
-    "eslint-config-wk": "^0.0.1-alpha.0",
+    "eslint-config-wk": "*",
     "husky": "^4.3.0",
     "lerna": "^3.22.1",
     "prettier": "^2.1.1",
-    "prettier-config-wk": "^1.0.0",
+    "prettier-config-wk": "*",
     "typescript": "^4.0.2"
   },
   "dependencies": {},

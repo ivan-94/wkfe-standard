@@ -19,8 +19,9 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "eslint-config-prettier": "^6.11.0",
-    "eslint-plugin-vue": "^7.0.0-beta.3"
+    "@babel/eslint-parser": "^7.14.5",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-vue": "^7.11.0"
   },
   "devDependencies": {
     "eslint": "^7.8.1",
