@@ -6,7 +6,19 @@ exports.createConfig = function createConfig(loose = false) {
       ...(loose ? exports.looseRules : {}),
     },
     reportUnusedDisableDirectives: true,
-    parser: 'babel-eslint',
+    parser: require.resolve('@babel/eslint-parser'),
+    parserOptions: {
+      sourceType: 'module',
+      requireConfigFile: false,
+      ecmaFeatures: {
+        jsx: true,
+      },
+      babelOptions: {
+        parserOpts: {
+          plugins: ['jsx', ['decorators', { decoratorsBeforeExport: false }]],
+        },
+      },
+    },
   };
 };
 
