@@ -48,8 +48,5 @@ run(function (err) {
   window.alert('done');
 });
 
-export @dec class MyClass {
-}
-
 // 代码格式化遵循 prettier
 export default {};

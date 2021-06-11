@@ -15,7 +15,7 @@ exports.createConfig = function createConfig(loose = false) {
       },
       babelOptions: {
         parserOpts: {
-          plugins: ['jsx', ['decorators', { decoratorsBeforeExport: false }]],
+          plugins: ['jsx', ['decorators', { decoratorsBeforeExport: true }]],
         },
       },
     },

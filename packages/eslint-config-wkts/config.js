@@ -44,6 +44,8 @@ exports.createConfig = function createConfig(loose = false) {
     ],
     parserOptions: {
       warnOnUnsupportedTypeScriptVersion: true,
+      ecmaVersion: 'es11',
+      lib: ['esNext'],
       project: './tsconfig.json',
     },
   };
