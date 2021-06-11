@@ -21,4 +21,5 @@ exports.createConfig = function createConfig(loose = false) {
 
 exports.looseRules = {
   'wktaro/css-module': 'warn',
+  'import/no-mutable-exports': 'warn',
 };

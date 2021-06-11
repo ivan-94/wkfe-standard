@@ -59,19 +59,20 @@ exports.rules = {
 };
 
 exports.looseRules = {
-  camelcase: 'warn',
   'dot-notation': 'warn',
-  eqeqeq: 'warn',
   'handle-callback-err': 'warn',
   'no-array-constructor': 'warn',
+  'no-empty': 'warn',
   'no-new-object': 'warn',
   'no-prototype-builtins': 'warn',
   'no-sequences': 'warn',
   'no-shadow': 'warn',
-  'no-empty': 'warn',
   'no-unneeded-ternary': 'warn',
   'no-unused-expressions': 'warn',
   'no-unused-vars': 'warn',
   'no-useless-return': 'warn',
   'prefer-const': 'warn',
+  'node/handle-callback-err': 'warn',
+  camelcase: 'warn',
+  eqeqeq: 'warn',
 };

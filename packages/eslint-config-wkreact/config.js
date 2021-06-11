@@ -22,6 +22,9 @@ exports.createConfig = function createConfig(loose = false) {
   };
 };
 
-exports.rules = {};
+exports.rules = {
+  'react/jsx-boolean-value': 'warn',
+  'react/jsx-curly-brace-presence': 'warn',
+};
 
 exports.looseRules = {};
