@@ -1,6 +1,6 @@
 {
   "name": "stylelint-config-wk",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "惟客数据通用样式规则",
   "main": "index.js",
   "files": [
