@@ -257,8 +257,7 @@ async function eslint(ctx) {
   print('Info', `项目类型: ${type}`);
   const config = {
     // TS 优先级高于其他
-    extends: [type === 'standard' ? 'wk' : `wk${type}`, typescript ? 'wkts' : '']
-      .filter(Boolean)
+    extends: [type !== 'standard' && `wk${type}`, typescript ? 'wkts' : 'wk']
       .filter(Boolean)
       .map(i => (loose ? `${i}/loose` : i)),
     plugins: [],

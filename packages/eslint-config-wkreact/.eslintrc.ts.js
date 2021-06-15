@@ -1,4 +1,4 @@
 module.exports = {
-  extends: ['wkts', require.resolve('./index')],
+  extends: [require.resolve('./index'), 'wkts'],
   rules: {},
 };

@@ -11,6 +11,7 @@ exports.createConfig = function createConfig(loose = false) {
       sourceType: 'module',
       requireConfigFile: false,
       ecmaFeatures: {
+        modules: true,
         jsx: true,
       },
       babelOptions: {

@@ -44,14 +44,14 @@ exports.createConfig = function createConfig(loose = false) {
           '@typescript-eslint/strict-boolean-expressions': 'off',
           ...(loose ? exports.looseRules : {}),
         },
+        parserOptions: {
+          warnOnUnsupportedTypeScriptVersion: true,
+          ecmaVersion: 'es11',
+          lib: ['esNext'],
+          project: './tsconfig.json',
+        },
       },
     ],
-    parserOptions: {
-      warnOnUnsupportedTypeScriptVersion: true,
-      ecmaVersion: 'es11',
-      lib: ['esNext'],
-      project: './tsconfig.json',
-    },
   };
 };
 
