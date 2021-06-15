@@ -1,8 +1,8 @@
 @dec
-export default 
+export default
 class Foo { }
 
 // 非法装饰器
-// export 
+// export
 // @dec
 // class Bar {}

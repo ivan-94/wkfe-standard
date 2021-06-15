@@ -13,6 +13,7 @@
     "bootstrap": "lerna bootstrap",
     "release:lerna": "lerna version --exact --no-git-tag-version",
     "release:only": "lerna exec -- npm publish",
+    "lint-all": "lerna run lint --no-bail",
     "wkstd": "node ./packages/cli/bin/wkstd.js",
     "gerrit-check": "npm run wkstd gerrit-check",
     "local-check": "npm run wkstd local-check"
