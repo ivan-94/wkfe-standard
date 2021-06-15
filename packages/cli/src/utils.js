@@ -482,6 +482,19 @@ async function updateConfig(key, value, cwd = process.cwd()) {
   }
 }
 
+/**
+ * 指定模块是否已安装
+ * @param {string} name
+ */
+function isInstalled(name) {
+  try {
+    require.resolve(name);
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+
 module.exports = {
   UseYarn,
   isGitRepo,
@@ -507,6 +520,7 @@ module.exports = {
   getConfigPath,
   getConfig,
   updateConfig,
+  isInstalled,
   IS_CI,
   COMMAND_NAME,
   PACKAGE_NAME,

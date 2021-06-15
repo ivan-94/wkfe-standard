@@ -5,6 +5,7 @@ const {
   getSafeChangeableFiles,
   execNpmScript,
   stageFiles,
+  isInstalled,
 } = require('../utils');
 
 /**
@@ -12,6 +13,11 @@ const {
  * stylelint 检查
  */
 async function stylelint(ctx) {
+  // 未安装 stylelint 跳过检查
+  if (!isInstalled('stylelint')) {
+    return;
+  }
+
   const {
     files,
     unstagedFiles,
@@ -25,7 +31,7 @@ async function stylelint(ctx) {
   }
 
   print('Info', '正在执行 stylelint 检查');
-  print('Debug', '变动文件: \n' + filtered.map((i) => `\t ${i}`).join('\n') + '\n');
+  print('Debug', '变动文件: \n' + filtered.map(i => `\t ${i}`).join('\n') + '\n');
 
   if (!fixable) {
     // 纯 lint
@@ -44,7 +50,7 @@ async function stylelint(ctx) {
     print(
       'Error',
       `下列文件不能被安全地进行 stylelint fix，请完成编辑并 stage(git add) 后重试: \n ${unsafe
-        .map((i) => `\t ${i}`)
+        .map(i => `\t ${i}`)
         .join('\n')}\n\n`
     );
     process.exit(1);
