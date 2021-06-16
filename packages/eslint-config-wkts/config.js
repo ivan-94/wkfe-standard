@@ -9,6 +9,7 @@ exports.createConfig = function createConfig() {
         rules: {
           camelcase: 'off',
           'no-useless-constructor': 'off',
+          'no-use-before-define': 'off',
           'no-unused-vars': 'off',
           'no-unused-expressions': 'off',
           'no-undef': 'off',
@@ -26,6 +27,7 @@ exports.createConfig = function createConfig() {
           '@typescript-eslint/prefer-nullish-coalescing': 'warn',
           '@typescript-eslint/prefer-includes': 'warn',
           '@typescript-eslint/no-useless-constructor': ['error'],
+          '@typescript-eslint/no-use-before-define': ['error'],
           '@typescript-eslint/no-unused-vars': 'warn',
           '@typescript-eslint/no-unused-expressions': 'warn',
           '@typescript-eslint/no-unnecessary-boolean-literal-compare': 'warn',
