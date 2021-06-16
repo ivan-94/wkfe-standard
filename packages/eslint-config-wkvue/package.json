@@ -9,7 +9,8 @@
   "author": "ivan-lee<carney520@hotmail.com>",
   "scripts": {
     "lint": "eslint ./example/**/*",
-    "lint:loose": "eslint -c .eslintrc.loose.js ./example/**/*"
+    "lint:loose": "eslint -c .eslintrc.loose.js ./example/**/*",
+    "lint:ts": "eslint -c .eslintrc.ts.js ./example/**/*"
   },
   "files": [
     "index.js",

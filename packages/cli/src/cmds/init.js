@@ -255,9 +255,13 @@ async function eslint(ctx) {
   // 创建配置文件
   if (typescript) print('Info', '使用 Typescript');
   print('Info', `项目类型: ${type}`);
+
+  /**
+   * @type {any}
+   */
   const config = {
     // TS 优先级高于其他
-    extends: [type !== 'standard' && `wk${type}`, typescript ? 'wkts' : 'wk']
+    extends: [typescript ? 'wkts' : 'wk', type !== 'standard' && `wk${type}`]
       .filter(Boolean)
       .map(i => (loose ? `${i}/loose` : i)),
     plugins: [],
@@ -280,6 +284,33 @@ async function eslint(ctx) {
       node: environment === 'node' ? true : undefined,
     },
   };
+
+  // Typescript 需要加上 parser 配置
+  if (typescript) {
+    config.overrides = [
+      {
+        files: ['*.ts', '*.tsx'],
+        rules: {},
+        parser: '@typescript-eslint/parser',
+        parserOptions: {
+          warnOnUnsupportedTypeScriptVersion: true,
+          ecmaVersion: 'es11',
+          lib: ['esNext'],
+          project: './tsconfig.json',
+        },
+      },
+    ];
+  }
+
+  // vue typescript 需要特殊处理
+  if (typescript && type === 'vue') {
+    config.parser = 'vue-eslint-parser';
+    Object.assign(config.parserOptions, {
+      parser: '@typescript-eslint/parser',
+      project: './tsconfig.json',
+      extraFileExtensions: ['.vue'],
+    });
+  }
 
   print('Info', '正在创建 .eslintrc.json');
   await fs.promises.writeFile(path.join(cwd, '.eslintrc.json'), toPrettieredJSON(config));

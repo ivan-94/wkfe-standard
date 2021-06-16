@@ -2,7 +2,9 @@
   "extends": ["wk"],
   "plugins": [],
   "globals": {},
-  "rules": {},
+  "rules": {
+    "import/no-commonjs": "off"
+  },
   "parserOptions": {
     "ecmaVersion": 11,
     "sourceType": "script"

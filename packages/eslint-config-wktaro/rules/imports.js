@@ -15,7 +15,6 @@ module.exports = {
       },
     },
     'import/extensions': ['.js', '.mjs', '.jsx'],
-    'import/core-modules': ['@tarojs/taro', '@tarojs/components'],
   },
 
   rules: {

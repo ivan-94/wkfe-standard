@@ -1,6 +1,12 @@
 module.exports = {
-  extends: ['wkts', require.resolve('./index')],
-  rules: {},
+  extends: ['wkts', require.resolve('./loose')],
+  parser: 'vue-eslint-parser',
+  parserOptions: {
+    parser: '@typescript-eslint/parser',
+    project: './tsconfig.json',
+    sourceType: 'module',
+    extraFileExtensions: ['.vue'],
+  },
   overrides: [
     {
       // typescripts
