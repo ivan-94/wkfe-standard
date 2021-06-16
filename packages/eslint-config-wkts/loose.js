@@ -2,4 +2,4 @@
 // 放宽一些验证规则
 const { createConfig } = require('./config');
 
-module.exports = createConfig(true);
+module.exports = createConfig();
