@@ -1,52 +1,64 @@
-exports.createConfig = function createConfig(loose = false) {
-  return {
-    extends: ['standard', 'prettier'],
-    rules: {
-      ...exports.rules,
-      ...(loose ? exports.looseRules : {}),
+const parserOptions = {
+  parser: require.resolve('@babel/eslint-parser'),
+  parserOptions: {
+    sourceType: 'module',
+    requireConfigFile: false,
+    ecmaFeatures: {
+      jsx: true,
+      modules: true,
     },
-    reportUnusedDisableDirectives: true,
-    parser: require.resolve('@babel/eslint-parser'),
-    parserOptions: {
-      sourceType: 'module',
-      requireConfigFile: false,
-      ecmaFeatures: {
-        jsx: true,
-        modules: true,
-      },
-      babelOptions: {
-        parserOpts: {
-          plugins: ['jsx', 'decorators-legacy'],
-        },
+    babelOptions: {
+      parserOpts: {
+        plugins: ['jsx', 'decorators-legacy'],
       },
     },
-  };
+  },
 };
 
-exports.rules = {
-  'lines-between-class-members': 'warn',
-  'spaced-comment': 'warn',
-  // 使用 let/const 取代 var
-  'no-var': 'warn',
+const rules = {
   yoda: 'warn',
-  'one-var': 'warn',
-  'no-extra-boolean-cast': 'warn',
-  'no-empty-function': 'warn',
-  'no-lone-blocks': 'warn',
-  // 去除没有必要的转义
-  'no-useless-escape': 'warn',
-  // 关闭，可以被 prettier 修复
-  'no-return-assign': 'warn',
-  'no-shadow': 'error',
-  'no-empty': ['error', { allowEmptyCatch: true }],
-  'prefer-promise-reject-errors': 'warn',
-  'standard/no-callback-literal': 'off',
-  'no-void': ['warn', { allowAsStatement: true }],
+  eqeqeq: 'warn',
   camelcase: 'warn',
+  'standard/no-callback-literal': 'off',
+  'spaced-comment': 'warn',
   'promise/param-names': 'off',
-
+  'prefer-promise-reject-errors': 'warn',
+  'prefer-const': 'warn',
+  'one-var': 'warn',
+  'node/handle-callback-err': 'warn',
+  'no-void': ['warn', { allowAsStatement: true }],
+  'no-var': 'warn',
+  'no-useless-return': 'warn',
+  'no-useless-escape': 'warn',
+  'no-unused-vars': 'warn',
+  'no-unused-expressions': 'warn',
+  'no-unneeded-ternary': 'warn',
+  'no-shadow': 'error',
+  'no-sequences': 'warn',
+  'no-return-assign': 'warn',
+  'no-prototype-builtins': 'warn',
+  'no-new-object': 'warn',
+  'no-lone-blocks': 'warn',
+  'no-extra-boolean-cast': 'warn',
+  'no-empty': ['error', { allowEmptyCatch: true }],
+  'no-empty-function': 'warn',
+  'no-array-constructor': 'warn',
+  'lines-between-class-members': 'warn',
+  'import/no-dynamic-require': 'error',
+  'import/no-commonjs': 'warn',
   'import/newline-after-import': 'warn',
   'import/first': 'warn',
+  'import/extensions': [
+    'warn',
+    'ignorePackages',
+    {
+      js: 'never',
+      jsx: 'never',
+      ts: 'never',
+      tsx: 'never',
+      mjs: 'never',
+    },
+  ],
   // 除了 script，其他都携带扩展名
   'import/no-useless-path-segments': [
     'warn',
@@ -54,26 +66,17 @@ exports.rules = {
       noUselessIndex: true,
     },
   ],
-  'import/extensions': ['warn', 'never'],
-  'import/no-dynamic-require': 'error',
-  'import/no-commonjs': 'warn',
+  'handle-callback-err': 'warn',
+  'dot-notation': 'warn',
 };
 
-exports.looseRules = {
-  'dot-notation': 'warn',
-  'handle-callback-err': 'warn',
-  'no-array-constructor': 'warn',
-  'no-empty': 'warn',
-  'no-new-object': 'warn',
-  'no-prototype-builtins': 'warn',
-  'no-sequences': 'warn',
-  'no-shadow': 'warn',
-  'no-unneeded-ternary': 'warn',
-  'no-unused-expressions': 'warn',
-  'no-unused-vars': 'warn',
-  'no-useless-return': 'warn',
-  'prefer-const': 'warn',
-  'node/handle-callback-err': 'warn',
-  camelcase: 'warn',
-  eqeqeq: 'warn',
+exports.createConfig = function createConfig() {
+  return {
+    extends: ['standard', 'prettier'],
+    rules,
+    reportUnusedDisableDirectives: true,
+    ...parserOptions,
+  };
 };
+
+exports.parserOptions = parserOptions;

@@ -1,5 +1,6 @@
 import pkg from './package.json'
 import module1 from './module1.js'
+import module11 from './module1'
 import module2 from './module2.tsx'
 import module3 from './module3.vue'
 import module4 from './module4/index'

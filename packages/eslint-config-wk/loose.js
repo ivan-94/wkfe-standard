@@ -1,6 +1,4 @@
-// 宽松版本
-// 放宽一些验证规则
-// 覆盖默认规则
+// 废弃，不维护两套
 const { createConfig } = require('./config');
 
-module.exports = createConfig(true);
+module.exports = createConfig();

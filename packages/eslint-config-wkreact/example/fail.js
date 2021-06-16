@@ -1,6 +1,6 @@
+import '../fycj'
+import relatvei from '../../relative'
 import React from 'react'
-// React 没有提供
-
 export function Foo() {
   const [count, setState] = useState()
   useEffect(() => {
