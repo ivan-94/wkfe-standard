@@ -7,6 +7,10 @@ tester.run('wxapi', rule, {
     {
       code: `wxApi.previewImage({urls: []});`,
     },
+    {
+      code: `Taro.previewImage({urls: []});`,
+      filename: '@/wxat-common/utils/wxApi/index.js',
+    },
   ],
   invalid: [
     {

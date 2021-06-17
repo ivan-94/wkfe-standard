@@ -20,7 +20,8 @@ module.exports = {
           path.object.type === 'Identifier' &&
           GLOBAL_OBJECT.has(path.object.name) &&
           path.property.type === 'Identifier' &&
-          API_LIST.has(path.property.name)
+          API_LIST.has(path.property.name) &&
+          !context.getFilename().includes('wxApi')
         ) {
           context.report({
             message: MESSAGE,
