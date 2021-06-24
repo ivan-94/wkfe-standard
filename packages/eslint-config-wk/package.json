@@ -1,6 +1,6 @@
 {
   "name": "eslint-config-wk",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "WakeData standard eslint config",
   "main": "index.js",
   "license": "MIT",
