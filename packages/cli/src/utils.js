@@ -196,7 +196,7 @@ function isGitRepo(cwd) {
  * @param {string} commit
  */
 function getChangedFiles(commit) {
-  const str = execCommand(`git diff --name-only --diff-filter=ACMR ${commit}`).toString();
+  const str = execCommand(`git diff --name-only --staged --diff-filter=ACMR ${commit}`).toString();
   return getLines(str);
 }
 
