@@ -8,6 +8,8 @@ const parserOptions = {
       modules: true,
     },
     babelOptions: {
+      configFile: false,
+      babelrc: false,
       parserOpts: {
         plugins: ['jsx', 'decorators-legacy'],
       },
