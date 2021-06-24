@@ -329,6 +329,8 @@ async function eslint(ctx) {
     'eslint-config-taro',
     'eslint-plugin-taro',
     'eslint-plugin-import',
+    'eslint-plugin-html',
+    'eslint-plugin-vue',
     'eslint-plugin-react',
     'eslint-plugin-react-hooks',
   ].forEach(m => {
